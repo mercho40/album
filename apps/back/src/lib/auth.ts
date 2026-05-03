@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth/minimal";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@back/db/drizzle";
+import { album } from "@back/db/schema";
 import { admin, organization } from "better-auth/plugins"
 
 export const auth = betterAuth({
@@ -9,7 +10,17 @@ export const auth = betterAuth({
   }),
   plugins: [
     admin(),
-    organization()
+    organization({
+      organizationHooks: {
+        afterCreateOrganization: async ({ organization: org }) => {
+          await db.insert(album).values({
+            organizationId: org.id,
+            catalogId: "WC2026",
+            visibility: "public",
+          }).onConflictDoNothing();
+        },
+      },
+    }),
   ],
   emailAndPassword: {
     enabled: true,
