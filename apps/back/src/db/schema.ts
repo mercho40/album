@@ -4,8 +4,10 @@ import {
   text,
   timestamp,
   boolean,
+  integer,
   index,
   uniqueIndex,
+  primaryKey,
 } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
@@ -140,6 +142,61 @@ export const invitation = pgTable(
   ],
 );
 
+export const sticker = pgTable(
+  "sticker",
+  {
+    id: text("id").primaryKey(),
+    catalogId: text("catalog_id").notNull(),
+    number: text("number").notNull(),
+    playerName: text("player_name").notNull(),
+    team: text("team").notNull(),
+    type: text("type").notNull(),
+    imageUrl: text("image_url"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("sticker_catalogId_idx").on(table.catalogId),
+    index("sticker_team_idx").on(table.team),
+    uniqueIndex("sticker_catalog_number_uidx").on(table.catalogId, table.number),
+  ],
+);
+
+export const album = pgTable("album", {
+  organizationId: text("organization_id")
+    .primaryKey()
+    .references(() => organization.id, { onDelete: "cascade" }),
+  catalogId: text("catalog_id").notNull().default("WC2026"),
+  visibility: text("visibility").notNull().default("public"),
+  description: text("description"),
+  coverImageUrl: text("cover_image_url"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
+
+export const albumSticker = pgTable(
+  "album_sticker",
+  {
+    albumId: text("album_id")
+      .notNull()
+      .references(() => album.organizationId, { onDelete: "cascade" }),
+    stickerId: text("sticker_id")
+      .notNull()
+      .references(() => sticker.id, { onDelete: "cascade" }),
+    count: integer("count").notNull().default(0),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.albumId, table.stickerId] }),
+    index("album_sticker_stickerId_count_idx").on(table.stickerId, table.count),
+  ],
+);
+
 export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),
@@ -161,9 +218,13 @@ export const accountRelations = relations(account, ({ one }) => ({
   }),
 }));
 
-export const organizationRelations = relations(organization, ({ many }) => ({
+export const organizationRelations = relations(organization, ({ one, many }) => ({
   members: many(member),
   invitations: many(invitation),
+  album: one(album, {
+    fields: [organization.id],
+    references: [album.organizationId],
+  }),
 }));
 
 export const memberRelations = relations(member, ({ one }) => ({
@@ -186,4 +247,27 @@ export const invitationRelations = relations(invitation, ({ one }) => ({
     fields: [invitation.inviterId],
     references: [user.id],
   }),
+}));
+
+export const albumRelations = relations(album, ({ one, many }) => ({
+  organization: one(organization, {
+    fields: [album.organizationId],
+    references: [organization.id],
+  }),
+  stickers: many(albumSticker),
+}));
+
+export const albumStickerRelations = relations(albumSticker, ({ one }) => ({
+  album: one(album, {
+    fields: [albumSticker.albumId],
+    references: [album.organizationId],
+  }),
+  sticker: one(sticker, {
+    fields: [albumSticker.stickerId],
+    references: [sticker.id],
+  }),
+}));
+
+export const stickerRelations = relations(sticker, ({ many }) => ({
+  albumStickers: many(albumSticker),
 }));

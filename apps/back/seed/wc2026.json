@@ -1,0 +1,398 @@
+[
+  {
+    "id": "WC2026-ARG-BADGE",
+    "catalogId": "WC2026",
+    "number": "ARG-BADGE",
+    "playerName": "Argentina - Escudo",
+    "team": "Argentina",
+    "type": "badge",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-ARG-1",
+    "catalogId": "WC2026",
+    "number": "ARG-1",
+    "playerName": "Lionel Messi",
+    "team": "Argentina",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-ARG-2",
+    "catalogId": "WC2026",
+    "number": "ARG-2",
+    "playerName": "Lautaro Martínez",
+    "team": "Argentina",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-ARG-3",
+    "catalogId": "WC2026",
+    "number": "ARG-3",
+    "playerName": "Alexis Mac Allister",
+    "team": "Argentina",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-ARG-4",
+    "catalogId": "WC2026",
+    "number": "ARG-4",
+    "playerName": "Rodrigo De Paul",
+    "team": "Argentina",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-ARG-5",
+    "catalogId": "WC2026",
+    "number": "ARG-5",
+    "playerName": "Julián Álvarez",
+    "team": "Argentina",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-ARG-6",
+    "catalogId": "WC2026",
+    "number": "ARG-6",
+    "playerName": "Enzo Fernández",
+    "team": "Argentina",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-ARG-7",
+    "catalogId": "WC2026",
+    "number": "ARG-7",
+    "playerName": "Emiliano Martínez",
+    "team": "Argentina",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-ARG-8",
+    "catalogId": "WC2026",
+    "number": "ARG-8",
+    "playerName": "Cristian Romero",
+    "team": "Argentina",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-ARG-9",
+    "catalogId": "WC2026",
+    "number": "ARG-9",
+    "playerName": "Nicolás Otamendi",
+    "team": "Argentina",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-ARG-10",
+    "catalogId": "WC2026",
+    "number": "ARG-10",
+    "playerName": "Nicolás González",
+    "team": "Argentina",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-BRA-BADGE",
+    "catalogId": "WC2026",
+    "number": "BRA-BADGE",
+    "playerName": "Brasil - Escudo",
+    "team": "Brasil",
+    "type": "badge",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-BRA-1",
+    "catalogId": "WC2026",
+    "number": "BRA-1",
+    "playerName": "Vinícius Jr.",
+    "team": "Brasil",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-BRA-2",
+    "catalogId": "WC2026",
+    "number": "BRA-2",
+    "playerName": "Rodrygo",
+    "team": "Brasil",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-BRA-3",
+    "catalogId": "WC2026",
+    "number": "BRA-3",
+    "playerName": "Casemiro",
+    "team": "Brasil",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-BRA-4",
+    "catalogId": "WC2026",
+    "number": "BRA-4",
+    "playerName": "Marquinhos",
+    "team": "Brasil",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-BRA-5",
+    "catalogId": "WC2026",
+    "number": "BRA-5",
+    "playerName": "Alisson Becker",
+    "team": "Brasil",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-BRA-6",
+    "catalogId": "WC2026",
+    "number": "BRA-6",
+    "playerName": "Raphinha",
+    "team": "Brasil",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-BRA-7",
+    "catalogId": "WC2026",
+    "number": "BRA-7",
+    "playerName": "Bruno Guimarães",
+    "team": "Brasil",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-BRA-8",
+    "catalogId": "WC2026",
+    "number": "BRA-8",
+    "playerName": "Éder Militão",
+    "team": "Brasil",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-BRA-9",
+    "catalogId": "WC2026",
+    "number": "BRA-9",
+    "playerName": "Gabriel Martinelli",
+    "team": "Brasil",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-BRA-10",
+    "catalogId": "WC2026",
+    "number": "BRA-10",
+    "playerName": "Lucas Paquetá",
+    "team": "Brasil",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-MEX-BADGE",
+    "catalogId": "WC2026",
+    "number": "MEX-BADGE",
+    "playerName": "México - Escudo",
+    "team": "México",
+    "type": "badge",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-MEX-1",
+    "catalogId": "WC2026",
+    "number": "MEX-1",
+    "playerName": "Edson Álvarez",
+    "team": "México",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-MEX-2",
+    "catalogId": "WC2026",
+    "number": "MEX-2",
+    "playerName": "Hirving Lozano",
+    "team": "México",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-MEX-3",
+    "catalogId": "WC2026",
+    "number": "MEX-3",
+    "playerName": "Raúl Jiménez",
+    "team": "México",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-MEX-4",
+    "catalogId": "WC2026",
+    "number": "MEX-4",
+    "playerName": "Guillermo Ochoa",
+    "team": "México",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-MEX-5",
+    "catalogId": "WC2026",
+    "number": "MEX-5",
+    "playerName": "Alexis Vega",
+    "team": "México",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-MEX-6",
+    "catalogId": "WC2026",
+    "number": "MEX-6",
+    "playerName": "Orbelín Pineda",
+    "team": "México",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-MEX-7",
+    "catalogId": "WC2026",
+    "number": "MEX-7",
+    "playerName": "Héctor Herrera",
+    "team": "México",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-MEX-8",
+    "catalogId": "WC2026",
+    "number": "MEX-8",
+    "playerName": "Néstor Araujo",
+    "team": "México",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-MEX-9",
+    "catalogId": "WC2026",
+    "number": "MEX-9",
+    "playerName": "César Montes",
+    "team": "México",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-MEX-10",
+    "catalogId": "WC2026",
+    "number": "MEX-10",
+    "playerName": "Roberto Alvarado",
+    "team": "México",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-USA-BADGE",
+    "catalogId": "WC2026",
+    "number": "USA-BADGE",
+    "playerName": "Estados Unidos - Escudo",
+    "team": "Estados Unidos",
+    "type": "badge",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-USA-1",
+    "catalogId": "WC2026",
+    "number": "USA-1",
+    "playerName": "Christian Pulisic",
+    "team": "Estados Unidos",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-USA-2",
+    "catalogId": "WC2026",
+    "number": "USA-2",
+    "playerName": "Weston McKennie",
+    "team": "Estados Unidos",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-USA-3",
+    "catalogId": "WC2026",
+    "number": "USA-3",
+    "playerName": "Tyler Adams",
+    "team": "Estados Unidos",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-USA-4",
+    "catalogId": "WC2026",
+    "number": "USA-4",
+    "playerName": "Matt Turner",
+    "team": "Estados Unidos",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-USA-5",
+    "catalogId": "WC2026",
+    "number": "USA-5",
+    "playerName": "Gio Reyna",
+    "team": "Estados Unidos",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-USA-6",
+    "catalogId": "WC2026",
+    "number": "USA-6",
+    "playerName": "Josh Sargent",
+    "team": "Estados Unidos",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-USA-7",
+    "catalogId": "WC2026",
+    "number": "USA-7",
+    "playerName": "Yunus Musah",
+    "team": "Estados Unidos",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-USA-8",
+    "catalogId": "WC2026",
+    "number": "USA-8",
+    "playerName": "Tim Weah",
+    "team": "Estados Unidos",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-USA-9",
+    "catalogId": "WC2026",
+    "number": "USA-9",
+    "playerName": "Sergino Dest",
+    "team": "Estados Unidos",
+    "type": "player",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-USA-10",
+    "catalogId": "WC2026",
+    "number": "USA-10",
+    "playerName": "Brenden Aaronson",
+    "team": "Estados Unidos",
+    "type": "player",
+    "imageUrl": null
+  }
+]
