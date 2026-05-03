@@ -69,16 +69,35 @@
 	<div
 		class="sticky top-0 z-10 -mx-4 bg-background/95 px-4 py-3 backdrop-blur md:-mx-6 md:px-6"
 	>
+		<div class="space-y-3">
+		<!-- Compact progress -->
+		<div class="space-y-1">
+			<div class="flex items-baseline justify-between text-sm">
+				<span class="font-medium tabular-nums">
+					{owned} <span class="text-muted-foreground">/ {total}</span>
+				</span>
+				<span class="text-muted-foreground tabular-nums">
+					+{dupes} repetida{dupes !== 1 ? "s" : ""}
+				</span>
+			</div>
+			<div class="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+				<div
+					class="h-full bg-foreground transition-all"
+					style:width="{total === 0 ? 0 : (owned / total) * 100}%"
+				></div>
+			</div>
+		</div>
+
 		<!-- Search input -->
 		<Input
 			type="search"
 			placeholder="Buscar jugador..."
 			bind:value={search}
-			class="mb-3 w-full md:max-w-sm"
+			class="w-full md:max-w-sm"
 		/>
 
 		<!-- Status chips -->
-		<div class="mb-2 flex flex-wrap gap-2">
+		<div class="flex flex-wrap gap-2">
 			<button
 				type="button"
 				class={cn(
@@ -149,26 +168,10 @@
 
 		<!-- Filtered count indicator -->
 		{#if isFiltered}
-			<p class="mt-2 text-sm text-muted-foreground">
+			<p class="text-sm text-muted-foreground">
 				Mostrando {filteredStickers.length} figurita{filteredStickers.length !== 1 ? "s" : ""}
 			</p>
 		{/if}
-	</div>
-
-	<!-- Global progress header -->
-	<div class="rounded-lg border bg-card p-4">
-		<p class="text-sm text-muted-foreground">Progreso</p>
-		<p class="text-2xl font-bold tabular-nums">
-			{owned} / {total}
-			<span class="text-base font-normal text-muted-foreground">
-				({dupes} repetida{dupes !== 1 ? "s" : ""})
-			</span>
-		</p>
-		<div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-muted">
-			<div
-				class="h-full bg-primary transition-all"
-				style="width: {total === 0 ? 0 : (owned / total) * 100}%"
-			></div>
 		</div>
 	</div>
 
