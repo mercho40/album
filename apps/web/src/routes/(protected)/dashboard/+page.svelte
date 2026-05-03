@@ -6,38 +6,59 @@
 	let { data } = $props();
 </script>
 
-<div class="flex min-h-svh items-center justify-center p-6 md:p-10">
-	<Card.Root class="mx-auto w-full max-w-sm">
-		<Card.Header>
-			<Card.Title class="text-2xl">Dashboard</Card.Title>
-			<Card.Description>Welcome back, {data.user?.name}</Card.Description>
-		</Card.Header>
-		<Card.Content class="space-y-4">
-			<div class="space-y-1">
-				<p class="text-muted-foreground text-sm">Email</p>
-				<p class="text-sm font-medium">{data.user?.email}</p>
-			</div>
-			<div class="space-y-1">
-				<p class="text-muted-foreground text-sm">Member since</p>
-				<p class="text-sm font-medium">
-					{data.user?.createdAt
-						? new Date(data.user.createdAt).toLocaleDateString()
-						: ""}
-				</p>
-			</div>
-			<Button
-				class="w-full"
-				variant="outline"
-				onclick={async () => {
-					await authClient.signOut();
-					window.location.href = "/login";
-				}}
-			>
-				Sign Out
-			</Button>
-		</Card.Content>
-		<Card.Footer>
-			<a href="/" class="text-muted-foreground text-sm underline">Back to home</a>
-		</Card.Footer>
-	</Card.Root>
+<div class="mx-auto max-w-4xl p-6 md:p-10">
+	<header class="mb-8 flex items-center justify-between">
+		<div>
+			<h1 class="text-3xl font-bold">Hola, {data.user?.name}</h1>
+			<p class="text-muted-foreground">Tus álbumes de figuritas</p>
+		</div>
+		<Button
+			variant="outline"
+			onclick={async () => {
+				await authClient.signOut();
+				window.location.href = "/";
+			}}
+		>
+			Cerrar sesión
+		</Button>
+	</header>
+
+	{#if data.albums.length === 0}
+		<Card.Root class="mx-auto max-w-md text-center">
+			<Card.Header>
+				<Card.Title>Empezá tu primer álbum</Card.Title>
+				<Card.Description>
+					Creá un álbum para registrar tus figuritas y encontrar con quién intercambiar.
+				</Card.Description>
+			</Card.Header>
+			<Card.Content>
+				<Button href="/new-album" class="w-full">Crear álbum</Button>
+			</Card.Content>
+		</Card.Root>
+	{:else}
+		<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+			{#each data.albums as album (album.id)}
+				<a href="/albums/{album.slug}">
+					<Card.Root class="h-full transition hover:border-primary">
+						<Card.Header>
+							<Card.Title>{album.name}</Card.Title>
+							<Card.Description>{album.visibility} · {album.memberRole}</Card.Description>
+						</Card.Header>
+						{#if album.description}
+							<Card.Content>
+								<p class="text-sm text-muted-foreground">{album.description}</p>
+							</Card.Content>
+						{/if}
+					</Card.Root>
+				</a>
+			{/each}
+			<a href="/new-album">
+				<Card.Root class="h-full border-dashed transition hover:border-primary">
+					<Card.Header class="text-center">
+						<Card.Title class="text-muted-foreground">+ Nuevo álbum</Card.Title>
+					</Card.Header>
+				</Card.Root>
+			</a>
+		</div>
+	{/if}
 </div>
