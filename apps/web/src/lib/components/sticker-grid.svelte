@@ -83,7 +83,7 @@
 			<div class="h-1.5 w-full overflow-hidden rounded-full bg-muted">
 				<div
 					class="h-full bg-foreground transition-all"
-					style="width: {total === 0 ? 0 : (owned / total) * 100}%"
+					style:width="{total === 0 ? 0 : (owned / total) * 100}%"
 				></div>
 			</div>
 		</div>
