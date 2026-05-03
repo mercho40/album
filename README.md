@@ -167,8 +167,8 @@ apps/
         directory/                     (MVP2)
         albums/[slug]/                 Vista universal (read+edit según permisos)
         (protected)/
-          dashboard/                   Mis álbumes
           new-album/                   Form de creación
+          me/                          Editar perfil (MVP2)
 ```
 
 ## Estado del proyecto
