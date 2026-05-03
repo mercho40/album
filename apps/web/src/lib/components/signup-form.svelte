@@ -24,7 +24,7 @@
 			{ email, password, name },
 			{
 				onSuccess: () => {
-					window.location.href = "/";
+					window.location.href = "/new-album";
 				},
 				onError: (ctx) => {
 					error = ctx.error.message;
