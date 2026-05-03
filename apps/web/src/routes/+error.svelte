@@ -34,9 +34,9 @@
 			<Card.Title class="text-2xl">{title}</Card.Title>
 			<Card.Description>{description}</Card.Description>
 		</Card.Header>
-		<Card.Content class="space-y-2">
-			<Button onclick={() => history.back()} variant="outline" class="w-full">Volver</Button>
+		<Card.Content class="flex flex-col gap-3 pt-2">
 			<Button href="/" class="w-full">Ir al inicio</Button>
+			<Button onclick={() => history.back()} variant="ghost" class="w-full">Volver</Button>
 		</Card.Content>
 	</Card.Root>
 </div>
