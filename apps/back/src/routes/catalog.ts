@@ -11,7 +11,7 @@ export const catalogRoutes = new Elysia({ prefix: "/catalog" })
         .select()
         .from(sticker)
         .where(eq(sticker.catalogId, params.catalogId))
-        .orderBy(asc(sticker.team), asc(sticker.number));
+        .orderBy(asc(sticker.createdAt));
 
       set.headers["cache-control"] = "public, max-age=3600";
       return rows;
