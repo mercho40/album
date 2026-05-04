@@ -27,6 +27,11 @@
 	);
 </script>
 
+<svelte:head>
+	<title>Error · Álbum</title>
+	<meta name="description" content="Algo salió mal." />
+</svelte:head>
+
 <div class="flex min-h-svh items-center justify-center p-6 md:p-10">
 	<Card.Root class="mx-auto w-full max-w-md text-center">
 		<Card.Header>

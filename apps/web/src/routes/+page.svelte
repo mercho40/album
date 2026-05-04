@@ -9,6 +9,19 @@
 	let { data } = $props();
 </script>
 
+<svelte:head>
+	{#if data.albums === null}
+		<title>Álbum de Figuritas — Mundial 2026</title>
+		<meta
+			name="description"
+			content="Registrá las figuritas que tenés y las repetidas. Compartilo con tu familia. Encontrá con quién intercambiar."
+		/>
+	{:else}
+		<title>Álbum de Figuritas — Mundial 2026</title>
+		<meta name="description" content="Tus álbumes de figuritas del Mundial 2026." />
+	{/if}
+</svelte:head>
+
 {#if data.albums === null}
 	<!-- Logged out: landing -->
 	<div class="relative min-h-svh">
@@ -57,20 +70,23 @@
 {:else}
 	<!-- Logged in: my albums -->
 	<div class="mx-auto max-w-4xl p-6 md:p-10">
-		<header class="mb-8 flex items-center justify-between">
+		<header class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 			<div>
 				<h1 class="text-3xl font-bold">Hola, {data.user?.name}</h1>
 				<p class="text-muted-foreground">Tus álbumes de figuritas</p>
 			</div>
-			<Button
-				variant="outline"
-				onclick={async () => {
-					await authClient.signOut();
-					window.location.href = "/";
-				}}
-			>
-				Cerrar sesión
-			</Button>
+			<div class="flex items-center gap-2">
+				<ThemeToggle />
+				<Button
+					variant="outline"
+					onclick={async () => {
+						await authClient.signOut();
+						window.location.href = "/";
+					}}
+				>
+					Cerrar sesión
+				</Button>
+			</div>
 		</header>
 
 		{#if navigating.to}
