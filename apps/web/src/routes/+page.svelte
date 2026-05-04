@@ -9,20 +9,48 @@
 
 {#if data.albums === null}
 	<!-- Logged out: landing -->
-	<div class="flex min-h-svh items-center justify-center p-6 md:p-10">
-		<Card.Root class="mx-auto w-full max-w-sm">
-			<Card.Header>
-				<Card.Title class="text-2xl">Álbum de Figuritas</Card.Title>
-				<Card.Description>Mundial 2026 — registrá las que tenés y las repetidas.</Card.Description>
-			</Card.Header>
-			<Card.Content class="flex flex-col gap-3 pt-2">
-				<Button href="/signup" class="w-full">Crear cuenta</Button>
-				<Button href="/login" variant="ghost" class="w-full">Iniciar sesión</Button>
-			</Card.Content>
-			<Card.Footer class="flex-col items-center gap-2">
-				<ThemeToggle />
-			</Card.Footer>
-		</Card.Root>
+	<div class="relative min-h-svh">
+		<div class="mx-auto flex min-h-svh max-w-3xl flex-col justify-center px-6 py-16 md:px-10">
+			<p class="mb-4 text-xs uppercase tracking-[0.2em] text-muted-foreground">Mundial 2026</p>
+
+			<h1 class="text-5xl font-bold leading-[0.95] tracking-tight md:text-7xl">
+				Tu álbum del Mundial.
+			</h1>
+
+			<p class="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl">
+				Registrá las figuritas que tenés y las repetidas. Compartilo con tu familia. Encontrá con
+				quién intercambiar.
+			</p>
+
+			<ul class="mt-10 space-y-2 text-sm text-muted-foreground">
+				<li class="flex items-start gap-3">
+					<span aria-hidden="true" class="select-none">·</span>
+					<span>Marcá tu colección sobre las 994 figuritas oficiales del álbum Panini.</span>
+				</li>
+				<li class="flex items-start gap-3">
+					<span aria-hidden="true" class="select-none">·</span>
+					<span>Compartí el álbum con familia o amigos para llevar la cuenta entre varios.</span>
+				</li>
+				<li class="flex items-start gap-3">
+					<span aria-hidden="true" class="select-none">·</span>
+					<span>Próximamente: matchmaker para encontrar con quién intercambiar.</span>
+				</li>
+			</ul>
+
+			<div class="mt-12 flex flex-col gap-4 md:flex-row md:items-center">
+				<Button href="/signup" class="h-12 w-full px-8 text-base md:w-auto">Crear cuenta</Button>
+				<a
+					href="/login"
+					class="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground md:ml-2"
+				>
+					¿Ya tenés cuenta? Iniciar sesión
+				</a>
+			</div>
+		</div>
+
+		<div class="fixed bottom-4 right-4">
+			<ThemeToggle />
+		</div>
 	</div>
 {:else}
 	<!-- Logged in: my albums -->
