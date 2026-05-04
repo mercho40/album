@@ -53,7 +53,8 @@
 			return acc;
 		}, {}),
 	);
-	const teams = $derived(Object.keys(groupedByTeam).sort());
+	// Mantener orden de aparición (el back devuelve por createdAt = orden del seed = grupos A-L).
+	const teams = $derived(Object.keys(groupedByTeam));
 
 	const total = $derived(stickers.length);
 	const owned = $derived(stickers.filter((s) => s.count >= 1).length);
