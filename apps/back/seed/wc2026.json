@@ -192,9 +192,9 @@
     "id": "WC2026-MEX13",
     "catalogId": "WC2026",
     "number": "MEX13",
-    "playerName": "México – Equipo",
+    "playerName": "México – Foto de Equipo",
     "team": "México",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -372,9 +372,9 @@
     "id": "WC2026-RSA13",
     "catalogId": "WC2026",
     "number": "RSA13",
-    "playerName": "Sudáfrica – Equipo",
+    "playerName": "Sudáfrica – Foto de Equipo",
     "team": "Sudáfrica",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -552,9 +552,9 @@
     "id": "WC2026-KOR13",
     "catalogId": "WC2026",
     "number": "KOR13",
-    "playerName": "Corea del Sur – Equipo",
+    "playerName": "Corea del Sur – Foto de Equipo",
     "team": "Corea del Sur",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -732,9 +732,9 @@
     "id": "WC2026-CZE13",
     "catalogId": "WC2026",
     "number": "CZE13",
-    "playerName": "Chequia – Equipo",
+    "playerName": "Chequia – Foto de Equipo",
     "team": "Chequia",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -912,9 +912,9 @@
     "id": "WC2026-CAN13",
     "catalogId": "WC2026",
     "number": "CAN13",
-    "playerName": "Canadá – Equipo",
+    "playerName": "Canadá – Foto de Equipo",
     "team": "Canadá",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -1092,9 +1092,9 @@
     "id": "WC2026-BIH13",
     "catalogId": "WC2026",
     "number": "BIH13",
-    "playerName": "Bosnia y Herzegovina – Equipo",
+    "playerName": "Bosnia y Herzegovina – Foto de Equipo",
     "team": "Bosnia y Herzegovina",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -1272,9 +1272,9 @@
     "id": "WC2026-QAT13",
     "catalogId": "WC2026",
     "number": "QAT13",
-    "playerName": "Catar – Equipo",
+    "playerName": "Catar – Foto de Equipo",
     "team": "Catar",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -1452,9 +1452,9 @@
     "id": "WC2026-SUI13",
     "catalogId": "WC2026",
     "number": "SUI13",
-    "playerName": "Suiza – Equipo",
+    "playerName": "Suiza – Foto de Equipo",
     "team": "Suiza",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -1632,9 +1632,9 @@
     "id": "WC2026-BRA13",
     "catalogId": "WC2026",
     "number": "BRA13",
-    "playerName": "Brasil – Equipo",
+    "playerName": "Brasil – Foto de Equipo",
     "team": "Brasil",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -1812,9 +1812,9 @@
     "id": "WC2026-MAR13",
     "catalogId": "WC2026",
     "number": "MAR13",
-    "playerName": "Marruecos – Equipo",
+    "playerName": "Marruecos – Foto de Equipo",
     "team": "Marruecos",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -1992,9 +1992,9 @@
     "id": "WC2026-HAI13",
     "catalogId": "WC2026",
     "number": "HAI13",
-    "playerName": "Haití – Equipo",
+    "playerName": "Haití – Foto de Equipo",
     "team": "Haití",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -2172,9 +2172,9 @@
     "id": "WC2026-SCO13",
     "catalogId": "WC2026",
     "number": "SCO13",
-    "playerName": "Escocia – Equipo",
+    "playerName": "Escocia – Foto de Equipo",
     "team": "Escocia",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -2352,9 +2352,9 @@
     "id": "WC2026-USA13",
     "catalogId": "WC2026",
     "number": "USA13",
-    "playerName": "Estados Unidos – Equipo",
+    "playerName": "Estados Unidos – Foto de Equipo",
     "team": "Estados Unidos",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -2532,9 +2532,9 @@
     "id": "WC2026-PAR13",
     "catalogId": "WC2026",
     "number": "PAR13",
-    "playerName": "Paraguay – Equipo",
+    "playerName": "Paraguay – Foto de Equipo",
     "team": "Paraguay",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -2712,9 +2712,9 @@
     "id": "WC2026-AUS13",
     "catalogId": "WC2026",
     "number": "AUS13",
-    "playerName": "Australia – Equipo",
+    "playerName": "Australia – Foto de Equipo",
     "team": "Australia",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -2892,9 +2892,9 @@
     "id": "WC2026-TUR13",
     "catalogId": "WC2026",
     "number": "TUR13",
-    "playerName": "Turquía – Equipo",
+    "playerName": "Turquía – Foto de Equipo",
     "team": "Turquía",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -3072,9 +3072,9 @@
     "id": "WC2026-GER13",
     "catalogId": "WC2026",
     "number": "GER13",
-    "playerName": "Alemania – Equipo",
+    "playerName": "Alemania – Foto de Equipo",
     "team": "Alemania",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -3252,9 +3252,9 @@
     "id": "WC2026-CUW13",
     "catalogId": "WC2026",
     "number": "CUW13",
-    "playerName": "Curaçao – Equipo",
+    "playerName": "Curaçao – Foto de Equipo",
     "team": "Curaçao",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -3432,9 +3432,9 @@
     "id": "WC2026-CIV13",
     "catalogId": "WC2026",
     "number": "CIV13",
-    "playerName": "Costa de Marfil – Equipo",
+    "playerName": "Costa de Marfil – Foto de Equipo",
     "team": "Costa de Marfil",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -3612,9 +3612,9 @@
     "id": "WC2026-ECU13",
     "catalogId": "WC2026",
     "number": "ECU13",
-    "playerName": "Ecuador – Equipo",
+    "playerName": "Ecuador – Foto de Equipo",
     "team": "Ecuador",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -3792,9 +3792,9 @@
     "id": "WC2026-NED13",
     "catalogId": "WC2026",
     "number": "NED13",
-    "playerName": "Países Bajos – Equipo",
+    "playerName": "Países Bajos – Foto de Equipo",
     "team": "Países Bajos",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -3972,9 +3972,9 @@
     "id": "WC2026-JPN13",
     "catalogId": "WC2026",
     "number": "JPN13",
-    "playerName": "Japón – Equipo",
+    "playerName": "Japón – Foto de Equipo",
     "team": "Japón",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -4152,9 +4152,9 @@
     "id": "WC2026-SWE13",
     "catalogId": "WC2026",
     "number": "SWE13",
-    "playerName": "Suecia – Equipo",
+    "playerName": "Suecia – Foto de Equipo",
     "team": "Suecia",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -4332,9 +4332,9 @@
     "id": "WC2026-TUN13",
     "catalogId": "WC2026",
     "number": "TUN13",
-    "playerName": "Túnez – Equipo",
+    "playerName": "Túnez – Foto de Equipo",
     "team": "Túnez",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -4512,9 +4512,9 @@
     "id": "WC2026-BEL13",
     "catalogId": "WC2026",
     "number": "BEL13",
-    "playerName": "Bélgica – Equipo",
+    "playerName": "Bélgica – Foto de Equipo",
     "team": "Bélgica",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -4692,9 +4692,9 @@
     "id": "WC2026-EGY13",
     "catalogId": "WC2026",
     "number": "EGY13",
-    "playerName": "Egipto – Equipo",
+    "playerName": "Egipto – Foto de Equipo",
     "team": "Egipto",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -4872,9 +4872,9 @@
     "id": "WC2026-IRN13",
     "catalogId": "WC2026",
     "number": "IRN13",
-    "playerName": "Irán – Equipo",
+    "playerName": "Irán – Foto de Equipo",
     "team": "Irán",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -5052,9 +5052,9 @@
     "id": "WC2026-NZL13",
     "catalogId": "WC2026",
     "number": "NZL13",
-    "playerName": "Nueva Zelanda – Equipo",
+    "playerName": "Nueva Zelanda – Foto de Equipo",
     "team": "Nueva Zelanda",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -5232,9 +5232,9 @@
     "id": "WC2026-ESP13",
     "catalogId": "WC2026",
     "number": "ESP13",
-    "playerName": "España – Equipo",
+    "playerName": "España – Foto de Equipo",
     "team": "España",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -5412,9 +5412,9 @@
     "id": "WC2026-CPV13",
     "catalogId": "WC2026",
     "number": "CPV13",
-    "playerName": "Cabo Verde – Equipo",
+    "playerName": "Cabo Verde – Foto de Equipo",
     "team": "Cabo Verde",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -5592,9 +5592,9 @@
     "id": "WC2026-KSA13",
     "catalogId": "WC2026",
     "number": "KSA13",
-    "playerName": "Arabia Saudita – Equipo",
+    "playerName": "Arabia Saudita – Foto de Equipo",
     "team": "Arabia Saudita",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -5772,9 +5772,9 @@
     "id": "WC2026-URU13",
     "catalogId": "WC2026",
     "number": "URU13",
-    "playerName": "Uruguay – Equipo",
+    "playerName": "Uruguay – Foto de Equipo",
     "team": "Uruguay",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -5952,9 +5952,9 @@
     "id": "WC2026-FRA13",
     "catalogId": "WC2026",
     "number": "FRA13",
-    "playerName": "Francia – Equipo",
+    "playerName": "Francia – Foto de Equipo",
     "team": "Francia",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -6132,9 +6132,9 @@
     "id": "WC2026-SEN13",
     "catalogId": "WC2026",
     "number": "SEN13",
-    "playerName": "Senegal – Equipo",
+    "playerName": "Senegal – Foto de Equipo",
     "team": "Senegal",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -6312,9 +6312,9 @@
     "id": "WC2026-IRQ13",
     "catalogId": "WC2026",
     "number": "IRQ13",
-    "playerName": "Irak – Equipo",
+    "playerName": "Irak – Foto de Equipo",
     "team": "Irak",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -6492,9 +6492,9 @@
     "id": "WC2026-NOR13",
     "catalogId": "WC2026",
     "number": "NOR13",
-    "playerName": "Noruega – Equipo",
+    "playerName": "Noruega – Foto de Equipo",
     "team": "Noruega",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -6672,9 +6672,9 @@
     "id": "WC2026-ARG13",
     "catalogId": "WC2026",
     "number": "ARG13",
-    "playerName": "Argentina – Equipo",
+    "playerName": "Argentina – Foto de Equipo",
     "team": "Argentina",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -6852,9 +6852,9 @@
     "id": "WC2026-ALG13",
     "catalogId": "WC2026",
     "number": "ALG13",
-    "playerName": "Argelia – Equipo",
+    "playerName": "Argelia – Foto de Equipo",
     "team": "Argelia",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -7032,9 +7032,9 @@
     "id": "WC2026-AUT13",
     "catalogId": "WC2026",
     "number": "AUT13",
-    "playerName": "Austria – Equipo",
+    "playerName": "Austria – Foto de Equipo",
     "team": "Austria",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -7212,9 +7212,9 @@
     "id": "WC2026-JOR13",
     "catalogId": "WC2026",
     "number": "JOR13",
-    "playerName": "Jordania – Equipo",
+    "playerName": "Jordania – Foto de Equipo",
     "team": "Jordania",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -7392,9 +7392,9 @@
     "id": "WC2026-POR13",
     "catalogId": "WC2026",
     "number": "POR13",
-    "playerName": "Portugal – Equipo",
+    "playerName": "Portugal – Foto de Equipo",
     "team": "Portugal",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -7572,9 +7572,9 @@
     "id": "WC2026-COD13",
     "catalogId": "WC2026",
     "number": "COD13",
-    "playerName": "Congo DR – Equipo",
+    "playerName": "Congo DR – Foto de Equipo",
     "team": "Congo DR",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -7752,9 +7752,9 @@
     "id": "WC2026-UZB13",
     "catalogId": "WC2026",
     "number": "UZB13",
-    "playerName": "Uzbekistán – Equipo",
+    "playerName": "Uzbekistán – Foto de Equipo",
     "team": "Uzbekistán",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -7932,9 +7932,9 @@
     "id": "WC2026-COL13",
     "catalogId": "WC2026",
     "number": "COL13",
-    "playerName": "Colombia – Equipo",
+    "playerName": "Colombia – Foto de Equipo",
     "team": "Colombia",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -8112,9 +8112,9 @@
     "id": "WC2026-ENG13",
     "catalogId": "WC2026",
     "number": "ENG13",
-    "playerName": "Inglaterra – Equipo",
+    "playerName": "Inglaterra – Foto de Equipo",
     "team": "Inglaterra",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -8292,9 +8292,9 @@
     "id": "WC2026-CRO13",
     "catalogId": "WC2026",
     "number": "CRO13",
-    "playerName": "Croacia – Equipo",
+    "playerName": "Croacia – Foto de Equipo",
     "team": "Croacia",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -8472,9 +8472,9 @@
     "id": "WC2026-GHA13",
     "catalogId": "WC2026",
     "number": "GHA13",
-    "playerName": "Ghana – Equipo",
+    "playerName": "Ghana – Foto de Equipo",
     "team": "Ghana",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -8652,9 +8652,9 @@
     "id": "WC2026-PAN13",
     "catalogId": "WC2026",
     "number": "PAN13",
-    "playerName": "Panamá – Equipo",
+    "playerName": "Panamá – Foto de Equipo",
     "team": "Panamá",
-    "type": "team_photo",
+    "type": "player",
     "imageUrl": null
   },
   {
@@ -8859,7 +8859,7 @@
     "id": "WC2026-CC5",
     "catalogId": "WC2026",
     "number": "CC5",
-    "playerName": "Antonee Robinson",
+    "playerName": "Joško Gvardiol",
     "team": "Coca-Cola Promo",
     "type": "promo",
     "imageUrl": null
@@ -8868,7 +8868,7 @@
     "id": "WC2026-CC6",
     "catalogId": "WC2026",
     "number": "CC6",
-    "playerName": "Jefferson Lerma",
+    "playerName": "Federico Valverde",
     "team": "Coca-Cola Promo",
     "type": "promo",
     "imageUrl": null
@@ -8877,7 +8877,7 @@
     "id": "WC2026-CC7",
     "catalogId": "WC2026",
     "number": "CC7",
-    "playerName": "Edson Álvarez",
+    "playerName": "Jefferson Lerma",
     "team": "Coca-Cola Promo",
     "type": "promo",
     "imageUrl": null
@@ -8886,7 +8886,7 @@
     "id": "WC2026-CC8",
     "catalogId": "WC2026",
     "number": "CC8",
-    "playerName": "Virgil van Dijk",
+    "playerName": "Enner Valencia",
     "team": "Coca-Cola Promo",
     "type": "promo",
     "imageUrl": null
@@ -8895,7 +8895,7 @@
     "id": "WC2026-CC9",
     "catalogId": "WC2026",
     "number": "CC9",
-    "playerName": "Alphonso Davies",
+    "playerName": "Gabriel Magalhães",
     "team": "Coca-Cola Promo",
     "type": "promo",
     "imageUrl": null
@@ -8904,7 +8904,7 @@
     "id": "WC2026-CC10",
     "catalogId": "WC2026",
     "number": "CC10",
-    "playerName": "Weston McKennie",
+    "playerName": "Virgil van Dijk",
     "team": "Coca-Cola Promo",
     "type": "promo",
     "imageUrl": null
@@ -8913,7 +8913,7 @@
     "id": "WC2026-CC11",
     "catalogId": "WC2026",
     "number": "CC11",
-    "playerName": "Lautaro Martínez",
+    "playerName": "Alphonso Davies",
     "team": "Coca-Cola Promo",
     "type": "promo",
     "imageUrl": null
@@ -8922,7 +8922,25 @@
     "id": "WC2026-CC12",
     "catalogId": "WC2026",
     "number": "CC12",
-    "playerName": "Gabriel Magalhães",
+    "playerName": "Emiliano Martínez",
+    "team": "Coca-Cola Promo",
+    "type": "promo",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-CC13",
+    "catalogId": "WC2026",
+    "number": "CC13",
+    "playerName": "Raúl Jiménez",
+    "team": "Coca-Cola Promo",
+    "type": "promo",
+    "imageUrl": null
+  },
+  {
+    "id": "WC2026-CC14",
+    "catalogId": "WC2026",
+    "number": "CC14",
+    "playerName": "Lautaro Martínez",
     "team": "Coca-Cola Promo",
     "type": "promo",
     "imageUrl": null

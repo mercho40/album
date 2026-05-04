@@ -20,7 +20,6 @@ type StickerType =
   | "cover"
   | "intro"
   | "history"
-  | "team_photo"
   | "badge"
   | "player"
   | "promo";
@@ -154,36 +153,33 @@ function parseBaseStickers(html: string): Array<{ code: string; rawName: string 
   return stickers;
 }
 
-function parseCocaColaStickers(html: string): Array<{ number: number; name: string }> {
-  const articleMatch = html.match(/<article[^>]*>([\s\S]*?)<\/article>/);
-  if (!articleMatch) throw new Error("Could not find <article> in page");
-  const article = articleMatch[1];
+/**
+ * Coca-Cola Latin America version (14 stickers) — hardcoded because regional
+ * variants are not reliably published on checklistinsider.
+ * Source: cartophilic-info-exch.blogspot.com (2026/04, Coca Cola Stickers post)
+ *         + cardzreview.com forums confirmation.
+ */
+const CC_LATIN_AMERICA: Array<{ number: number; name: string }> = [
+  { number: 1,  name: "Lamine Yamal - Spain" },
+  { number: 2,  name: "Joshua Kimmich - Germany" },
+  { number: 3,  name: "Harry Kane - England" },
+  { number: 4,  name: "Santiago Giménez - Mexico" },
+  { number: 5,  name: "Joško Gvardiol - Croatia" },
+  { number: 6,  name: "Federico Valverde - Uruguay" },
+  { number: 7,  name: "Jefferson Lerma - Colombia" },
+  { number: 8,  name: "Enner Valencia - Ecuador" },
+  { number: 9,  name: "Gabriel Magalhães - Brazil" },
+  { number: 10, name: "Virgil van Dijk - Netherlands" },
+  { number: 11, name: "Alphonso Davies - Canada" },
+  { number: 12, name: "Emiliano Martínez - Argentina" },
+  { number: 13, name: "Raúl Jiménez - Mexico" },
+  { number: 14, name: "Lautaro Martínez - Argentina" },
+];
 
-  const ccStart = article.indexOf("Coca-Cola USA Checklist");
-  if (ccStart === -1) throw new Error("Could not find Coca-Cola section");
-
-  const ccSection = article.slice(ccStart, ccStart + 3000);
-  const clean = stripTags(ccSection).replace(/\s+/g, " ");
-
-  // Match "1 Lamine Yamal - Spain" etc.
-  const matches = [...clean.matchAll(/\b(\d{1,2})\s+([A-ZÁÉÍÓÚÑÜÀÂÇÈÊÎÔÙÛÄËÏÖÜ][^0-9\n]+?)\s*(?=\d{1,2}\s+[A-Z]|$)/g)];
-  const result: Array<{ number: number; name: string }> = [];
-
-  // Simpler approach: split the text block that contains the stickers
-  const blockMatch = clean.match(/Exclusive to marked Coca-Cola labels\.(.+?)(\$|\d{1,3}\.\d{2}|Buy on)/s);
-  if (blockMatch) {
-    const block = blockMatch[1].trim();
-    const lineMatches = [...block.matchAll(/(\d{1,2})\s+(.+?)(?=\s+\d{1,2}\s+[A-Z]|$)/g)];
-    for (const lm of lineMatches) {
-      const num = parseInt(lm[1]);
-      const name = lm[2].trim();
-      if (num >= 1 && num <= 12 && name.length > 2) {
-        result.push({ number: num, name });
-      }
-    }
-  }
-
-  return result;
+function parseCocaColaStickers(_html: string): Array<{ number: number; name: string }> {
+  // Use the hardcoded Latin America list (14 stickers) which matches
+  // the version distributed in Argentina and most of Latin America.
+  return CC_LATIN_AMERICA;
 }
 
 // ------------------------------------------------------------------
@@ -297,14 +293,15 @@ function buildStickers(
         imageUrl: null,
       });
     } else if (stickerNum === 13) {
-      // Team photo
+      // Sticker #13 is a team group photo in the physical album (treated as player type
+      // for compatibility with figuritas.app and similar trackers)
       result.push({
         id: `WC2026-${code}`,
         catalogId: "WC2026",
         number: code,
-        playerName: `${countryEs} – Equipo`,
+        playerName: `${countryEs} – Foto de Equipo`,
         team: countryEs,
-        type: "team_photo",
+        type: "player",
         imageUrl: null,
       });
     } else {
@@ -371,7 +368,7 @@ function validate(stickers: Sticker[]): void {
   }
 
   const teamStickers = stickers.filter((s) =>
-    ["player", "team_photo", "badge"].includes(s.type)
+    ["player", "badge"].includes(s.type)
   );
   const teams = new Set(teamStickers.map((s) => s.team));
 
