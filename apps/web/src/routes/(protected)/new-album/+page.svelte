@@ -38,6 +38,11 @@
 	let slug = $derived(userEditedSlug ? manualSlug : slugify(name));
 </script>
 
+<svelte:head>
+	<title>Nuevo álbum · Álbum</title>
+	<meta name="description" content="Creá un álbum para registrar tus figuritas y compartirlo con tu familia." />
+</svelte:head>
+
 <div class="flex min-h-svh items-center justify-center p-6 md:p-10">
 	<Card.Root class="mx-auto w-full max-w-md">
 		<Card.Header>

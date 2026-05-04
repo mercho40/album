@@ -44,7 +44,7 @@
 			"flex flex-col items-center rounded-lg border p-3 transition",
 			owned && "border-primary bg-primary/5",
 			!owned && "border-dashed bg-muted/30 opacity-60",
-			isClickableAsWhole && "cursor-pointer hover:opacity-80 hover:shadow-sm",
+			isClickableAsWhole && "cursor-pointer hover:opacity-80 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
 		),
 	);
 </script>
@@ -80,7 +80,7 @@
 		<div class="flex h-12 w-full items-center justify-between gap-2">
 			<button
 				type="button"
-				class="flex h-12 w-12 items-center justify-center rounded border text-xl disabled:opacity-30"
+				class="flex h-12 w-12 items-center justify-center rounded border text-xl disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 				disabled={count <= 0}
 				onclick={onDecrement}
 				aria-label="Quitar una {playerName}"
@@ -88,7 +88,7 @@
 			<span class="text-xl font-bold tabular-nums">{count}</span>
 			<button
 				type="button"
-				class="flex h-12 w-12 items-center justify-center rounded border text-xl"
+				class="flex h-12 w-12 items-center justify-center rounded border text-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 				onclick={onIncrement}
 				aria-label="Sumar una {playerName}"
 			>+</button>
