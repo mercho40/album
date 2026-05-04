@@ -4,7 +4,7 @@
 
 <div class="mx-auto max-w-6xl p-6 md:p-10">
 	<header class="mb-6">
-		<a href="/dashboard" class="text-sm text-muted-foreground underline">← Mis álbumes</a>
+		<a href="/" class="text-sm text-muted-foreground underline">← Inicio</a>
 		<h1 class="mt-2 text-3xl font-bold">{data.album.name}</h1>
 		{#if data.album.description}
 			<p class="text-muted-foreground">{data.album.description}</p>
