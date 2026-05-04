@@ -66,113 +66,113 @@
 </script>
 
 <div class="space-y-6">
-	<!-- Sticky filter panel -->
+	<!-- Progress (NO sticky) -->
+	<div class="space-y-1">
+		<div class="flex items-baseline justify-between text-sm">
+			<span class="font-medium tabular-nums">
+				{owned} <span class="text-muted-foreground">/ {total}</span>
+			</span>
+			<span class="text-muted-foreground tabular-nums">
+				+{dupes} repetida{dupes !== 1 ? "s" : ""}
+			</span>
+		</div>
+		<div class="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+			<div
+				class="h-full bg-foreground transition-all"
+				style:width="{total === 0 ? 0 : (owned / total) * 100}%"
+			></div>
+		</div>
+	</div>
+
+	<!-- Sticky filter panel (sin progress) -->
 	<div
 		class="sticky top-0 z-10 -mx-4 bg-background/95 px-4 py-3 backdrop-blur md:-mx-6 md:px-6"
 	>
 		<div class="space-y-3">
-		<!-- Compact progress -->
-		<div class="space-y-1">
-			<div class="flex items-baseline justify-between text-sm">
-				<span class="font-medium tabular-nums">
-					{owned} <span class="text-muted-foreground">/ {total}</span>
-				</span>
-				<span class="text-muted-foreground tabular-nums">
-					+{dupes} repetida{dupes !== 1 ? "s" : ""}
-				</span>
-			</div>
-			<div class="h-1.5 w-full overflow-hidden rounded-full bg-muted">
-				<div
-					class="h-full bg-foreground transition-all"
-					style:width="{total === 0 ? 0 : (owned / total) * 100}%"
-				></div>
-			</div>
-		</div>
+			<!-- Search input -->
+			<Input
+				type="search"
+				placeholder="Buscar jugador..."
+				bind:value={search}
+				class="w-full md:max-w-sm"
+			/>
 
-		<!-- Search input -->
-		<Input
-			type="search"
-			placeholder="Buscar jugador..."
-			bind:value={search}
-			class="w-full md:max-w-sm"
-		/>
-
-		<!-- Status chips -->
-		<div class="flex flex-wrap gap-2">
-			<button
-				type="button"
-				class={cn(
-					"rounded-full px-3 py-1.5 text-sm whitespace-nowrap transition",
-					statusFilter === "all"
-						? "bg-primary text-primary-foreground"
-						: "bg-muted text-muted-foreground hover:bg-muted/80",
-				)}
-				onclick={() => (statusFilter = "all")}
-			>
-				Todas
-			</button>
-			<button
-				type="button"
-				class={cn(
-					"rounded-full px-3 py-1.5 text-sm whitespace-nowrap transition",
-					statusFilter === "missing"
-						? "bg-primary text-primary-foreground"
-						: "bg-muted text-muted-foreground hover:bg-muted/80",
-				)}
-				onclick={() => (statusFilter = "missing")}
-			>
-				Faltantes
-			</button>
-			<button
-				type="button"
-				class={cn(
-					"rounded-full px-3 py-1.5 text-sm whitespace-nowrap transition",
-					statusFilter === "dupes"
-						? "bg-primary text-primary-foreground"
-						: "bg-muted text-muted-foreground hover:bg-muted/80",
-				)}
-				onclick={() => (statusFilter = "dupes")}
-			>
-				Repetidas
-			</button>
-		</div>
-
-		<!-- Team chips (horizontal scroll on mobile) -->
-		<div class="flex gap-2 overflow-x-auto pb-1">
-			<button
-				type="button"
-				class={cn(
-					"rounded-full px-3 py-1.5 text-sm whitespace-nowrap transition",
-					teamFilter === null
-						? "bg-primary text-primary-foreground"
-						: "bg-muted text-muted-foreground hover:bg-muted/80",
-				)}
-				onclick={() => (teamFilter = null)}
-			>
-				Todos
-			</button>
-			{#each allTeams as team (team)}
+			<!-- Status chips -->
+			<div class="flex flex-wrap gap-2">
 				<button
 					type="button"
 					class={cn(
 						"rounded-full px-3 py-1.5 text-sm whitespace-nowrap transition",
-						teamFilter === team
+						statusFilter === "all"
 							? "bg-primary text-primary-foreground"
 							: "bg-muted text-muted-foreground hover:bg-muted/80",
 					)}
-					onclick={() => (teamFilter = teamFilter === team ? null : team)}
+					onclick={() => (statusFilter = "all")}
 				>
-					{team}
+					Todas
 				</button>
-			{/each}
-		</div>
+				<button
+					type="button"
+					class={cn(
+						"rounded-full px-3 py-1.5 text-sm whitespace-nowrap transition",
+						statusFilter === "missing"
+							? "bg-primary text-primary-foreground"
+							: "bg-muted text-muted-foreground hover:bg-muted/80",
+					)}
+					onclick={() => (statusFilter = "missing")}
+				>
+					Faltantes
+				</button>
+				<button
+					type="button"
+					class={cn(
+						"rounded-full px-3 py-1.5 text-sm whitespace-nowrap transition",
+						statusFilter === "dupes"
+							? "bg-primary text-primary-foreground"
+							: "bg-muted text-muted-foreground hover:bg-muted/80",
+					)}
+					onclick={() => (statusFilter = "dupes")}
+				>
+					Repetidas
+				</button>
+			</div>
 
-		<!-- Filtered count indicator -->
-		{#if isFiltered}
-			<p class="text-sm text-muted-foreground">
-				Mostrando {filteredStickers.length} figurita{filteredStickers.length !== 1 ? "s" : ""}
-			</p>
-		{/if}
+			<!-- Team chips (horizontal scroll on mobile) -->
+			<div class="flex gap-2 overflow-x-auto pb-1">
+				<button
+					type="button"
+					class={cn(
+						"rounded-full px-3 py-1.5 text-sm whitespace-nowrap transition",
+						teamFilter === null
+							? "bg-primary text-primary-foreground"
+							: "bg-muted text-muted-foreground hover:bg-muted/80",
+					)}
+					onclick={() => (teamFilter = null)}
+				>
+					Todos
+				</button>
+				{#each allTeams as team (team)}
+					<button
+						type="button"
+						class={cn(
+							"rounded-full px-3 py-1.5 text-sm whitespace-nowrap transition",
+							teamFilter === team
+								? "bg-primary text-primary-foreground"
+								: "bg-muted text-muted-foreground hover:bg-muted/80",
+						)}
+						onclick={() => (teamFilter = teamFilter === team ? null : team)}
+					>
+						{team}
+					</button>
+				{/each}
+			</div>
+
+			<!-- Filtered count indicator -->
+			{#if isFiltered}
+				<p class="text-sm text-muted-foreground">
+					Mostrando {filteredStickers.length} figurita{filteredStickers.length !== 1 ? "s" : ""}
+				</p>
+			{/if}
 		</div>
 	</div>
 
