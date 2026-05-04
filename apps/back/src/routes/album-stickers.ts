@@ -63,7 +63,7 @@ export const albumStickerRoutes = new Elysia({ prefix: "/albums" })
           and(eq(albumSticker.stickerId, sticker.id), eq(albumSticker.albumId, a.id)),
         )
         .where(eq(sticker.catalogId, a.catalogId))
-        .orderBy(sticker.team, sticker.number);
+        .orderBy(sticker.createdAt);
 
       return rows;
     },
