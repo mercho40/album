@@ -2,7 +2,9 @@
 	import { authClient } from "$lib/auth-client";
 	import { Button } from "$lib/components/ui/button/index.js";
 	import * as Card from "$lib/components/ui/card/index.js";
+	import { Skeleton } from "$lib/components/ui/skeleton/index.js";
 	import ThemeToggle from "$lib/components/theme-toggle.svelte";
+	import { navigating } from "$app/state";
 
 	let { data } = $props();
 </script>
@@ -71,7 +73,16 @@
 			</Button>
 		</header>
 
-		{#if data.albums.length === 0}
+		{#if navigating.to}
+			<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+				{#each Array(3) as _, i (i)}
+					<div class="rounded-lg border p-6">
+						<Skeleton class="mb-2 h-6 w-2/3" />
+						<Skeleton class="h-4 w-1/3" />
+					</div>
+				{/each}
+			</div>
+		{:else if data.albums.length === 0}
 			<Card.Root class="mx-auto max-w-md text-center">
 				<Card.Header>
 					<Card.Title>Empezá tu primer álbum</Card.Title>

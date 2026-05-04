@@ -9,18 +9,17 @@
 		FieldDescription,
 	} from "$lib/components/ui/field/index.js";
 	import { authClient } from "$lib/auth-client";
+	import { toast } from "svelte-sonner";
 
 	const id = $props.id();
 
 	let email = $state("");
 	let password = $state("");
 	let loading = $state(false);
-	let error = $state("");
 
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
 		loading = true;
-		error = "";
 		await authClient.signIn.email(
 			{ email, password },
 			{
@@ -28,7 +27,7 @@
 					window.location.href = "/";
 				},
 				onError: (ctx) => {
-					error = ctx.error.message;
+					toast.error(ctx.error.message);
 				},
 			},
 		);
@@ -57,9 +56,6 @@
 					</div>
 					<Input id="password-{id}" type="password" required bind:value={password} />
 				</Field>
-				{#if error}
-					<p class="text-sm text-red-500">{error}</p>
-				{/if}
 				<Field>
 					<Button type="submit" class="w-full" disabled={loading}>
 						{loading ? "Logging in..." : "Login"}
