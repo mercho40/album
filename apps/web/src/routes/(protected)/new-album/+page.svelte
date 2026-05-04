@@ -9,8 +9,15 @@
 		FieldDescription,
 	} from "$lib/components/ui/field/index.js";
 	import { untrack } from "svelte";
+	import { toast } from "svelte-sonner";
 
 	let { form } = $props();
+
+	$effect(() => {
+		if (form?.error) {
+			toast.error(form.error);
+		}
+	});
 
 	let name = $state(untrack(() => form?.values?.name ?? ""));
 	let manualSlug = $state(untrack(() => form?.values?.slug ?? ""));
@@ -80,9 +87,6 @@
 						</div>
 					</details>
 
-					{#if form?.error}
-						<p class="text-sm text-red-500">{form.error}</p>
-					{/if}
 					<Field>
 						<Button type="submit" class="w-full" disabled={submitting}>
 							{submitting ? "Creando..." : "Crear álbum"}
