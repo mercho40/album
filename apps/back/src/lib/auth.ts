@@ -42,7 +42,10 @@ export const auth = betterAuth({
   session: {
     cookieCache: {
       enabled: true,
-      maxAge: 5 * 60, // Cache duration in seconds
+      // Igual que la duración de la sesión real (default Better Auth: 7 días).
+      // El hook del web (apps/web/src/hooks.server.ts) lee solo este cache, no
+      // revalida contra el back. Si dura menos, el user parece deslogueado al expirar.
+      maxAge: 7 * 24 * 60 * 60,
     },
   },
 });
