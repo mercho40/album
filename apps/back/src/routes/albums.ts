@@ -1,7 +1,7 @@
 import { Elysia, t } from "elysia";
-import { db } from "@back/db/drizzle";
-import { album, organization, member } from "@back/db/schema";
-import { auth } from "@back/lib/auth";
+import { db } from "../db/drizzle";
+import { album, organization, member } from "../db/schema";
+import { auth } from "../lib/auth";
 import { betterAuth } from "./_shared";
 import { and, eq } from "drizzle-orm";
 
