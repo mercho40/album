@@ -1,5 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "sveltekit",
   "rewrites": [
     { "source": "/api/:path*", "destination": "https://album-back-two.vercel.app/:path*" }
   ]
