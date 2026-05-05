@@ -19,6 +19,7 @@
     "elysia": "latest"
   },
   "devDependencies": {
+    "@types/node": "^25.6.0",
     "bun-types": "latest",
     "drizzle-kit": "^0.31.10",
     "postgres": "^3.4.9",
