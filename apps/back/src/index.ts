@@ -18,12 +18,10 @@ const app = new Elysia()
   .get("/health", () => ({ status: "ok", timestamp: Date.now() }))
   .use(catalogRoutes)
   .use(albumRoutes)
-  .use(albumStickerRoutes);
+  .use(albumStickerRoutes)
+  .listen(Number(process.env.PORT) || 3000);
 
-if (process.env.VERCEL !== "1") {
-  app.listen(3000);
-  console.log(`Elysia escuchando en :${app.server?.port}`);
-}
+console.log(`🦊 Elysia escuchando en :${app.server?.port}`);
 
 export default app;
 export type App = typeof app;
