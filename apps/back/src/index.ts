@@ -1,41 +1,28 @@
 import { Elysia } from "elysia";
-import { auth } from "@back/lib/auth";
 import { cors } from "@elysiajs/cors";
-
-// user middleware (compute user and session and pass to routes)
-const betterAuth = new Elysia({ name: "better-auth" })
-  .mount(auth.handler)
-  .macro({
-    auth: {
-      async resolve({ status, request: { headers } }) {
-        const session = await auth.api.getSession({
-          headers,
-        });
-
-        if (!session) return status(401);
-
-        return {
-          user: session.user,
-          session: session.session,
-        };
-      },
-    },
-  });
+import { betterAuth } from "./routes/_shared";
+import { catalogRoutes } from "./routes/catalog";
+import { albumRoutes } from "./routes/albums";
+import { albumStickerRoutes } from "./routes/album-stickers";
 
 const app = new Elysia()
   .use(betterAuth)
   .use(
     cors({
       origin: process.env.WEB_URL!,
-      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
       credentials: true,
       allowedHeaders: ["Content-Type", "Authorization"],
     }),
   )
   .get("/health", () => ({ status: "ok", timestamp: Date.now() }))
+  .use(catalogRoutes)
+  .use(albumRoutes)
+  .use(albumStickerRoutes)
   .listen(3000);
 
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
 );
-export type App = typeof app 
+
+export type App = typeof app;

@@ -1,89 +1,180 @@
-# M4
+# Álbum de Figuritas — Mundial 2026
 
-Full-stack TypeScript monorepo starter template.
+App web para registrar las figuritas del álbum Panini Mundial 2026: marcá las que tenés y las repetidas, compartí tu álbum con familia o amigos para llevar la cuenta entre varios. Próximamente: encontrá automáticamente con quién podés intercambiar.
+
+🌐 **Demo:** _por publicar — ver `docs/superpowers/plans/2026-05-02-album-mvp1-plan.md` Phase 5 para el setup_
+📦 **Repo:** [github.com/mercho40/album](https://github.com/mercho40/album)
+
+## Integrantes
+
+- **Simon Mersich** — Backend (schema, hook, endpoints, integración auth/db)
+- **Oliver Jones** — Frontend (componentes, pantallas, deploy front)
+
+## Funcionalidades (MVP1)
+
+- ✅ Registro / login con email + password (Google y GitHub disponibles vía OAuth)
+- ✅ Crear álbumes propios con visibilidad configurable (`public` / `unlisted` / `private`)
+- ✅ Marcar figuritas: poseídas y repetidas, sobre catálogo WC2026 parcial (~44 figuritas: ARG, BRA, MEX, USA)
+- ✅ Persistencia en Postgres (Neon) con Drizzle
+- ✅ Despliegue: Vercel (front) + Fly.io (back) + Neon (DB)
+
+## Funcionalidades (MVP2 — en desarrollo)
+
+- 🚧 Catálogo completo (~670 figuritas)
+- 🚧 Compartir álbum con otros usuarios (invitaciones, roles `editor` / `admin`)
+- 🚧 Directorio público + matchmaker (encontrar con quién intercambiar automáticamente)
+- 🚧 Propuestas de intercambio con máquina de estados (`pending` → `accepted` → `completed`)
+- 🚧 Avatar de usuario (CDN: Vercel Blob)
+- 🚧 Edición de perfil del usuario
 
 ## Stack
 
 - **Runtime:** Bun
 - **Monorepo:** Turborepo
-- **Frontend:** SvelteKit 5, Tailwind CSS 4, shadcn-svelte
-- **Backend:** Elysia
-- **Auth:** Better Auth (email/password, Google, GitHub)
-- **Database:** Drizzle ORM, PostgreSQL
-- **API Client:** Eden Treaty (type-safe RPC)
+- **Frontend:** SvelteKit 5 (runes), Tailwind 4, shadcn-svelte
+- **Backend:** Elysia (Bun)
+- **Auth:** Better Auth (email/password + Google + GitHub) con plugin `organization()`
+- **DB:** Drizzle ORM + PostgreSQL (Neon)
+- **API:** Eden Treaty (RPC type-safe extremo a extremo)
+- **Hosting:** Vercel (front) + Fly.io (back)
 
-## Setup
+## Decisiones técnicas
+
+### 1. Type-safety end-to-end con Eden Treaty
+El front importa el tipo `App` del back (`import type { App } from "@back/index"`) y obtiene autocompletado y validación en cada call. Cada endpoint nuevo es automáticamente tipado en el frontend sin ningún code generation step.
+
+### 2. `album` como extensión de `organization`
+Reusamos las tablas de Better Auth (`organization`, `member`, `invitation`) como base para "álbum compartido + miembros + invitaciones por email". La tabla `album` extiende `organization` con FK 1-a-1 (`album.organization_id` PK + FK). Un hook `afterCreateOrganization` del plugin garantiza que toda nueva org tenga su `album` asociado.
+
+Esto nos da gratis las invitaciones por email y la gestión de miembros con roles para el MVP2 (compartir álbum) sin escribir lógica de invitations from scratch.
+
+### 3. Catálogo cerrado y solo-lectura desde la app
+El seed de figuritas (`apps/back/seed/wc2026.json`) se carga vía script administrativo (`bun run db:seed`). No hay endpoints públicos para crear/modificar figuritas. Esto garantiza integridad referencial entre álbumes — todos los usuarios apuntan al mismo `sticker.id`.
+
+### 4. Optimistic updates en marcar figuritas
+La grilla del álbum hace un PATCH al servidor pero actualiza la UI inmediatamente. Si el servidor rechaza el cambio, revierte el estado local. Resultado: percepción de instantaneidad incluso con latencia visible.
+
+### 5. Permisos resueltos server-side
+El layout server load del álbum calcula `canView`, `canEdit`, `canManage` en base al rol del miembro (o ausencia de rol para visitantes). El front solo muestra/oculta controles según los flags. Los endpoints **también** validan permisos (no confían en el front).
+
+## Setup local
+
+### Pre-requisitos
+- [Bun 1.3+](https://bun.sh)
+- Cuenta en [Neon](https://neon.tech) (free tier)
+
+### Pasos
 
 ```bash
+# Clonar e instalar
+git clone https://github.com/mercho40/album.git
+cd album
 bun install
-```
 
-Copy environment files and fill in your values:
-
-```bash
+# Configurar envs (copiar y completar):
 cp apps/back/.env.example apps/back/.env
 cp apps/web/.env.example apps/web/.env
-```
 
-The `BETTER_AUTH_SECRET` must match in both apps. Generate one with:
-
-```bash
+# DATABASE_URL: pegá la URL de tu Neon branch
+# BETTER_AUTH_SECRET: el mismo en ambos apps. Generar con:
 openssl rand -base64 32
-```
 
-Run database migrations:
+# Aplicar migraciones + cargar seed
+cd apps/back
+bunx drizzle-kit migrate
+bun run db:seed
 
-```bash
-cd apps/back && bunx drizzle-kit migrate
-```
-
-## Development
-
-```bash
+# Volver a raíz y arrancar
+cd ../..
 bun run dev
 ```
 
-This starts both apps:
-- **Frontend:** http://localhost:3001
-- **Backend:** http://localhost:3000
+- Front: http://localhost:3001
+- Back: http://localhost:3000
+
+## Branches
+
+| Rama | Propósito |
+|---|---|
+| `main` | Producción. Solo recibe merges desde `develop`. |
+| `develop` | Integración. Recibe PRs de `simon` / `oliver` / sub-ramas de feature. |
+| `simon` | Rama personal de Simon (back). |
+| `oliver` | Rama personal de Oliver (front). |
+
+**Workflow:**
+1. Feature en `simon` o `oliver` (commits con conventional commits, en español).
+2. PR a `develop` con review del compañero.
+3. Cuando `develop` está estable: PR `develop` → `main` con tag SemVer.
+
+## Versionado
+
+SemVer:
+- `v0.1.0` — MVP1 (esta release): álbum + marcar figuritas + deploy.
+- `v0.2.0` — Sprint social: compartir álbum, directorio, avatar.
+- `v1.0.0` — Entrega final: matchmaker + trades.
 
 ## Scripts
 
-| Command | Description |
-|---------|-------------|
-| `bun run dev` | Start all apps in development |
-| `bun run build` | Build all apps |
-| `bun run check-types` | Type check across monorepo |
-| `bun run format` | Format with Prettier |
-| `bun run start` | Start production (requires build) |
+### Raíz (Turbo orquesta los 2 apps)
 
-### Backend (apps/back)
+| Comando | Descripción |
+|---|---|
+| `bun run dev` | Levanta back y front en paralelo |
+| `bun run build` | Build de los dos apps |
+| `bun run check-types` | Type-check del monorepo |
+| `bun run format` | Prettier sobre todo |
 
-| Command | Description |
-|---------|-------------|
-| `bunx drizzle-kit generate` | Generate migrations |
-| `bunx drizzle-kit migrate` | Apply migrations |
-| `bunx drizzle-kit studio` | Open Drizzle Studio |
+### Backend (`apps/back/`)
 
-## Project Structure
+| Comando | Descripción |
+|---|---|
+| `bun run db:generate` | Genera migración nueva desde schema |
+| `bun run db:migrate` | Aplica migraciones a la DB |
+| `bun run db:seed` | Carga el catálogo en la DB |
+| `bun run db:studio` | Abre Drizzle Studio (UI) |
+
+## Estructura del proyecto
 
 ```
 apps/
-  back/           Elysia API server (port 3000)
+  back/                            Elysia API server (port 3000)
     src/
-      index.ts        Server entry, routes, auth macro
-      lib/auth.ts     Better Auth configuration
-      db/schema.ts    Drizzle database schema
-      db/drizzle.ts   Database client
-  web/            SvelteKit frontend (port 3001)
+      index.ts                       Wireup + CORS + /health
+      lib/auth.ts                    Better Auth + plugin organization + hook
+      db/schema.ts                   Drizzle: user/session/account/org + sticker/album/albumSticker
+      db/drizzle.ts                  Cliente DB (bun-sql)
+      db/seed.ts                     Script de seed (idempotente)
+      routes/_shared.ts              Macro betterAuth con resolve de session
+      routes/catalog.ts              GET /catalog/:id/stickers + detalle
+      routes/albums.ts               POST/GET/check-slug de álbumes
+      routes/album-stickers.ts       GET/PATCH inventario del álbum
+    seed/wc2026.json                 Catálogo (44 figuritas hoy)
+    migrations/                      SQL generado por drizzle-kit
+    Dockerfile + fly.toml            Deploy en Fly.io
+
+  web/                             SvelteKit frontend (port 3001)
     src/
-      hooks.server.ts     Auth session from cookie cache
-      lib/api.ts          Eden Treaty client
-      lib/auth-client.ts  Better Auth client
-      lib/components/     App components
-      lib/components/ui/  shadcn-svelte components
+      hooks.server.ts                Auth session desde cookie cache
+      lib/api.ts                     createApi(fetch) → Eden Treaty client
+      lib/auth-client.ts             Better Auth client (organization plugin)
+      lib/components/
+        sticker-card.svelte            Card de figurita con +/-
+        sticker-grid.svelte            Grilla agrupada por equipo
+        ui/                            shadcn-svelte primitives
       routes/
-        (protected)/      Auth-guarded routes
-        login/            Prerendered login page
-        signup/           Prerendered signup page
+        +page.svelte                   Landing
+        login/, signup/                Auth pages
+        directory/                     (MVP2)
+        albums/[slug]/                 Vista universal (read+edit según permisos)
+        (protected)/
+          new-album/                   Form de creación
+          me/                          Editar perfil (MVP2)
 ```
+
+## Estado del proyecto
+
+Este TP se desarrolló iterativamente con un spec + plan en `docs/superpowers/`:
+- Spec: `2026-05-02-album-figuritas-design.md`
+- Plan MVP1: `2026-05-02-album-mvp1-plan.md`
+
+(Los `docs/` están gitignoreados — quedan locales como referencia interna del equipo.)
