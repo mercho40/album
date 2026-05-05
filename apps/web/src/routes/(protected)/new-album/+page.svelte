@@ -9,8 +9,15 @@
 		FieldDescription,
 	} from "$lib/components/ui/field/index.js";
 	import { untrack } from "svelte";
+	import { toast } from "svelte-sonner";
 
 	let { form } = $props();
+
+	$effect(() => {
+		if (form?.error) {
+			toast.error(form.error);
+		}
+	});
 
 	let name = $state(untrack(() => form?.values?.name ?? ""));
 	let manualSlug = $state(untrack(() => form?.values?.slug ?? ""));
@@ -30,6 +37,11 @@
 
 	let slug = $derived(userEditedSlug ? manualSlug : slugify(name));
 </script>
+
+<svelte:head>
+	<title>Nuevo álbum · Álbum</title>
+	<meta name="description" content="Creá un álbum para registrar tus figuritas y compartirlo con tu familia." />
+</svelte:head>
 
 <div class="flex min-h-svh items-center justify-center p-6 md:p-10">
 	<Card.Root class="mx-auto w-full max-w-md">
@@ -80,9 +92,6 @@
 						</div>
 					</details>
 
-					{#if form?.error}
-						<p class="text-sm text-red-500">{form.error}</p>
-					{/if}
 					<Field>
 						<Button type="submit" class="w-full" disabled={submitting}>
 							{submitting ? "Creando..." : "Crear álbum"}

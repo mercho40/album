@@ -102,7 +102,7 @@
 				<button
 					type="button"
 					class={cn(
-						"rounded-full px-3 py-1.5 text-sm whitespace-nowrap transition",
+						"rounded-full px-3 py-1.5 text-sm whitespace-nowrap transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
 						statusFilter === "all"
 							? "bg-primary text-primary-foreground"
 							: "bg-muted text-muted-foreground hover:bg-muted/80",
@@ -114,7 +114,7 @@
 				<button
 					type="button"
 					class={cn(
-						"rounded-full px-3 py-1.5 text-sm whitespace-nowrap transition",
+						"rounded-full px-3 py-1.5 text-sm whitespace-nowrap transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
 						statusFilter === "missing"
 							? "bg-primary text-primary-foreground"
 							: "bg-muted text-muted-foreground hover:bg-muted/80",
@@ -126,7 +126,7 @@
 				<button
 					type="button"
 					class={cn(
-						"rounded-full px-3 py-1.5 text-sm whitespace-nowrap transition",
+						"rounded-full px-3 py-1.5 text-sm whitespace-nowrap transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
 						statusFilter === "dupes"
 							? "bg-primary text-primary-foreground"
 							: "bg-muted text-muted-foreground hover:bg-muted/80",
@@ -142,7 +142,7 @@
 				<button
 					type="button"
 					class={cn(
-						"rounded-full px-3 py-1.5 text-sm whitespace-nowrap transition",
+						"rounded-full px-3 py-1.5 text-sm whitespace-nowrap transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
 						teamFilter === null
 							? "bg-primary text-primary-foreground"
 							: "bg-muted text-muted-foreground hover:bg-muted/80",
@@ -155,7 +155,7 @@
 					<button
 						type="button"
 						class={cn(
-							"rounded-full px-3 py-1.5 text-sm whitespace-nowrap transition",
+							"rounded-full px-3 py-1.5 text-sm whitespace-nowrap transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
 							teamFilter === team
 								? "bg-primary text-primary-foreground"
 								: "bg-muted text-muted-foreground hover:bg-muted/80",
@@ -182,7 +182,7 @@
 			<p class="text-sm text-muted-foreground">No hay figuritas con esos filtros.</p>
 			<button
 				type="button"
-				class="mt-2 text-sm text-primary underline"
+				class="mt-2 text-sm text-primary underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 				onclick={resetFilters}
 			>
 				Limpiar filtros
