@@ -1,6 +1,6 @@
 import { Elysia, t } from "elysia";
-import { db } from "@back/db/drizzle";
-import { sticker } from "@back/db/schema";
+import { db } from "../db/drizzle";
+import { sticker } from "../db/schema";
 import { eq, asc } from "drizzle-orm";
 
 export const catalogRoutes = new Elysia({ prefix: "/catalog" })
