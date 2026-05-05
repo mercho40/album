@@ -2,8 +2,10 @@ import { Elysia } from "elysia";
 import { db } from "./db/drizzle";
 import { sticker } from "./db/schema";
 import { sql } from "drizzle-orm";
+import { auth } from "./lib/auth";
 
 const app = new Elysia()
+  .mount(auth.handler)
   .get("/health", () => ({ status: "ok", timestamp: Date.now() }))
   .get("/debug/db", async () => {
     try {
@@ -13,7 +15,10 @@ const app = new Elysia()
       return { ok: false, error: String(e) };
     }
   })
-  .get("/", () => "Hello with Drizzle");
+  .get("/debug/auth", () => {
+    return { ok: typeof auth.handler === "function" };
+  })
+  .get("/", () => "Hello with Drizzle + Better Auth");
 
 if (process.env.VERCEL !== "1") {
   app.listen(3000);
