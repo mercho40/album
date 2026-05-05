@@ -2,7 +2,15 @@ import { Elysia } from "elysia";
 import { db } from "./db/drizzle";
 import { sticker } from "./db/schema";
 import { sql } from "drizzle-orm";
-import { auth } from "./lib/auth";
+import { betterAuth } from "better-auth/minimal";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+
+// Better Auth minimal: sin plugins, sin OAuth, sin hooks
+const auth = betterAuth({
+  database: drizzleAdapter(db, { provider: "pg" }),
+  emailAndPassword: { enabled: true },
+  baseURL: process.env.BETTER_AUTH_URL,
+});
 
 const app = new Elysia()
   .mount(auth.handler)
@@ -15,10 +23,8 @@ const app = new Elysia()
       return { ok: false, error: String(e) };
     }
   })
-  .get("/debug/auth", () => {
-    return { ok: typeof auth.handler === "function" };
-  })
-  .get("/", () => "Hello with Drizzle + Better Auth");
+  .get("/debug/auth", () => ({ ok: typeof auth.handler === "function" }))
+  .get("/", () => "Hello with minimal auth");
 
 if (process.env.VERCEL !== "1") {
   app.listen(3000);
