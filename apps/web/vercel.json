@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://album-back.vercel.app/:path*" }
+    { "source": "/api/:path*", "destination": "https://album-back-two.vercel.app/:path*" }
   ]
 }
