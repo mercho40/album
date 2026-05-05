@@ -14,9 +14,9 @@ App web para registrar las figuritas del álbum Panini Mundial 2026: marcá las 
 
 - ✅ Registro / login con email + password (Google y GitHub disponibles vía OAuth)
 - ✅ Crear álbumes propios con visibilidad configurable (`public` / `unlisted` / `private`)
-- ✅ Marcar figuritas: poseídas y repetidas, sobre catálogo WC2026 parcial (~44 figuritas: ARG, BRA, MEX, USA)
+- ✅ Marcar figuritas: poseídas y repetidas, sobre catálogo completo WC2026 (994 stickers)
 - ✅ Persistencia en Postgres (Neon) con Drizzle
-- ✅ Despliegue: Vercel (front + back con Bun runtime) + Neon (DB)
+- ✅ Despliegue: Vercel (front) + Dokploy/EC2 (back, Docker + Bun) + Neon (DB)
 
 ## Funcionalidades (MVP2 — en desarrollo)
 
@@ -36,7 +36,7 @@ App web para registrar las figuritas del álbum Panini Mundial 2026: marcá las 
 - **Auth:** Better Auth (email/password + Google + GitHub) con plugin `organization()`
 - **DB:** Drizzle ORM + PostgreSQL (Neon)
 - **API:** Eden Treaty (RPC type-safe extremo a extremo)
-- **Hosting:** Vercel (front + back, Bun runtime) + Neon (DB)
+- **Hosting:** Vercel (front) + Dokploy en EC2 (back, contenedor Docker con Bun) + Neon (DB)
 
 ## Decisiones técnicas
 
@@ -54,8 +54,10 @@ El seed de figuritas (`apps/back/seed/wc2026.json`) se carga vía script adminis
 ### 4. Optimistic updates en marcar figuritas
 La grilla del álbum hace un PATCH al servidor pero actualiza la UI inmediatamente. Si el servidor rechaza el cambio, revierte el estado local. Resultado: percepción de instantaneidad incluso con latencia visible.
 
-### 5. Same-origin via Vercel rewrites
-El back (`album-back.vercel.app`) se expone bajo `/api/*` del dominio del front gracias a un rewrite en `apps/web/vercel.json`. El browser ve un único origen: las cookies de sesión de Better Auth se envían automáticamente sin `credentials: "include"` cross-origin ni hacks de `cookieCache.maxAge`. En dev local, `PUBLIC_API_URL=http://localhost:3000` sigue funcionando directamente.
+### 5. Hosting híbrido: Vercel (front) + Dokploy/EC2 (back)
+El front es SvelteKit con `@sveltejs/adapter-vercel`. El back es Elysia + Bun + Better Auth, contenedorizado con un `Dockerfile` multi-stage en la raíz (build con `bun build --compile` a binario standalone, runtime Debian slim). Dokploy en una EC2 hace el deploy automático desde el push a `main`. El front llama al back cross-origin con CORS y `credentials: "include"`; `cookieCache.maxAge=7d` evita re-logins espurios.
+
+**Por qué no Vercel para el back:** Better Auth crashea al cargarse en el runtime Bun de Vercel (circular dependencies según [issue Vercel community](https://community.vercel.com/t/elysia-and-bun-serverless-function-fails-with-exit-status-1-on-vercel/33734)). Dokploy nos da un proceso Bun persistente, sin cold starts y compatible con todo el stack.
 
 ### 6. Permisos resueltos server-side
 El layout server load del álbum calcula `canView`, `canEdit`, `canManage` en base al rol del miembro (o ausencia de rol para visitantes). El front solo muestra/oculta controles según los flags. Los endpoints **también** validan permisos (no confían en el front).
