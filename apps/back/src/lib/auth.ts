@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth/minimal";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "@back/db/drizzle";
-import { album } from "@back/db/schema";
+import { db } from "../db/drizzle";
+import { album } from "../db/schema";
 import { admin, organization } from "better-auth/plugins"
 
 export const auth = betterAuth({
@@ -42,10 +42,7 @@ export const auth = betterAuth({
   session: {
     cookieCache: {
       enabled: true,
-      // Igual que la duración de la sesión real (default Better Auth: 7 días).
-      // El hook del web (apps/web/src/hooks.server.ts) lee solo este cache, no
-      // revalida contra el back. Si dura menos, el user parece deslogueado al expirar.
-      maxAge: 7 * 24 * 60 * 60,
+      maxAge: 5 * 60, // 5 minutos. Same-origin vía Vercel rewrite; el back refresca el cache automáticamente.
     },
   },
 });
