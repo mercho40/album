@@ -4,30 +4,29 @@
 	import * as Field from "$lib/components/ui/field/index.js";
 	import { Input } from "$lib/components/ui/input/index.js";
 	import { authClient } from "$lib/auth-client";
+	import { toast } from "svelte-sonner";
 
 	let name = $state("");
 	let email = $state("");
 	let password = $state("");
 	let confirmPassword = $state("");
 	let loading = $state(false);
-	let error = $state("");
 
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
 		if (password !== confirmPassword) {
-			error = "Passwords do not match";
+			toast.error("Las contraseñas no coinciden");
 			return;
 		}
 		loading = true;
-		error = "";
 		await authClient.signUp.email(
 			{ email, password, name },
 			{
 				onSuccess: () => {
-					window.location.href = "/";
+					window.location.href = "/new-album";
 				},
 				onError: (ctx) => {
-					error = ctx.error.message;
+					toast.error(ctx.error.message);
 				},
 			},
 		);
@@ -60,9 +59,6 @@
 					<Field.Label for="confirm-password">Confirm Password</Field.Label>
 					<Input id="confirm-password" type="password" required bind:value={confirmPassword} />
 				</Field.Field>
-				{#if error}
-					<p class="text-sm text-red-500">{error}</p>
-				{/if}
 				<Field.Group>
 					<Field.Field>
 						<Button type="submit" class="w-full" disabled={loading}>
