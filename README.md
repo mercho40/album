@@ -16,7 +16,7 @@ App web para registrar las figuritas del álbum Panini Mundial 2026: marcá las 
 - ✅ Crear álbumes propios con visibilidad configurable (`public` / `unlisted` / `private`)
 - ✅ Marcar figuritas: poseídas y repetidas, sobre catálogo WC2026 parcial (~44 figuritas: ARG, BRA, MEX, USA)
 - ✅ Persistencia en Postgres (Neon) con Drizzle
-- ✅ Despliegue: Vercel (front) + Fly.io (back) + Neon (DB)
+- ✅ Despliegue: Vercel (front + back con Bun runtime) + Neon (DB)
 
 ## Funcionalidades (MVP2 — en desarrollo)
 
@@ -36,7 +36,7 @@ App web para registrar las figuritas del álbum Panini Mundial 2026: marcá las 
 - **Auth:** Better Auth (email/password + Google + GitHub) con plugin `organization()`
 - **DB:** Drizzle ORM + PostgreSQL (Neon)
 - **API:** Eden Treaty (RPC type-safe extremo a extremo)
-- **Hosting:** Vercel (front) + Fly.io (back)
+- **Hosting:** Vercel (front + back, Bun runtime) + Neon (DB)
 
 ## Decisiones técnicas
 
@@ -54,7 +54,10 @@ El seed de figuritas (`apps/back/seed/wc2026.json`) se carga vía script adminis
 ### 4. Optimistic updates en marcar figuritas
 La grilla del álbum hace un PATCH al servidor pero actualiza la UI inmediatamente. Si el servidor rechaza el cambio, revierte el estado local. Resultado: percepción de instantaneidad incluso con latencia visible.
 
-### 5. Permisos resueltos server-side
+### 5. Same-origin via Vercel rewrites
+El back (`album-back.vercel.app`) se expone bajo `/api/*` del dominio del front gracias a un rewrite en `apps/web/vercel.json`. El browser ve un único origen: las cookies de sesión de Better Auth se envían automáticamente sin `credentials: "include"` cross-origin ni hacks de `cookieCache.maxAge`. En dev local, `PUBLIC_API_URL=http://localhost:3000` sigue funcionando directamente.
+
+### 6. Permisos resueltos server-side
 El layout server load del álbum calcula `canView`, `canEdit`, `canManage` en base al rol del miembro (o ausencia de rol para visitantes). El front solo muestra/oculta controles según los flags. Los endpoints **también** validan permisos (no confían en el front).
 
 ## Setup local
@@ -150,7 +153,7 @@ apps/
       routes/album-stickers.ts       GET/PATCH inventario del álbum
     seed/wc2026.json                 Catálogo (44 figuritas hoy)
     migrations/                      SQL generado por drizzle-kit
-    Dockerfile + fly.toml            Deploy en Fly.io
+    vercel.json                      Deploy en Vercel (Bun runtime)
 
   web/                             SvelteKit frontend (port 3001)
     src/
