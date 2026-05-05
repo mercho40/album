@@ -2,10 +2,25 @@
 	import { authClient } from "$lib/auth-client";
 	import { Button } from "$lib/components/ui/button/index.js";
 	import * as Card from "$lib/components/ui/card/index.js";
+	import { Skeleton } from "$lib/components/ui/skeleton/index.js";
 	import ThemeToggle from "$lib/components/theme-toggle.svelte";
+	import { navigating } from "$app/state";
 
 	let { data } = $props();
 </script>
+
+<svelte:head>
+	{#if data.albums === null}
+		<title>Álbum de Figuritas — Mundial 2026</title>
+		<meta
+			name="description"
+			content="Registrá las figuritas que tenés y las repetidas. Compartilo con tu familia. Encontrá con quién intercambiar."
+		/>
+	{:else}
+		<title>Álbum de Figuritas — Mundial 2026</title>
+		<meta name="description" content="Tus álbumes de figuritas del Mundial 2026." />
+	{/if}
+</svelte:head>
 
 {#if data.albums === null}
 	<!-- Logged out: landing -->
@@ -55,23 +70,35 @@
 {:else}
 	<!-- Logged in: my albums -->
 	<div class="mx-auto max-w-4xl p-6 md:p-10">
-		<header class="mb-8 flex items-center justify-between">
+		<header class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 			<div>
 				<h1 class="text-3xl font-bold">Hola, {data.user?.name}</h1>
 				<p class="text-muted-foreground">Tus álbumes de figuritas</p>
 			</div>
-			<Button
-				variant="outline"
-				onclick={async () => {
-					await authClient.signOut();
-					window.location.href = "/";
-				}}
-			>
-				Cerrar sesión
-			</Button>
+			<div class="flex items-center gap-2">
+				<ThemeToggle />
+				<Button
+					variant="outline"
+					onclick={async () => {
+						await authClient.signOut();
+						window.location.href = "/";
+					}}
+				>
+					Cerrar sesión
+				</Button>
+			</div>
 		</header>
 
-		{#if data.albums.length === 0}
+		{#if navigating.to}
+			<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+				{#each Array(3) as _, i (i)}
+					<div class="rounded-lg border p-6">
+						<Skeleton class="mb-2 h-6 w-2/3" />
+						<Skeleton class="h-4 w-1/3" />
+					</div>
+				{/each}
+			</div>
+		{:else if data.albums.length === 0}
 			<Card.Root class="mx-auto max-w-md text-center">
 				<Card.Header>
 					<Card.Title>Empezá tu primer álbum</Card.Title>
