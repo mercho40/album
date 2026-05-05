@@ -1,17 +1,19 @@
 import { Elysia } from "elysia";
+import { db } from "./db/drizzle";
+import { sticker } from "./db/schema";
+import { sql } from "drizzle-orm";
 
 const app = new Elysia()
   .get("/health", () => ({ status: "ok", timestamp: Date.now() }))
-  .get("/debug/env", () => ({
-    hasDatabaseUrl: typeof process.env.DATABASE_URL === "string",
-    hasBetterAuthSecret: typeof process.env.BETTER_AUTH_SECRET === "string",
-    hasBetterAuthUrl: typeof process.env.BETTER_AUTH_URL === "string",
-    hasWebUrl: typeof process.env.WEB_URL === "string",
-    bunVersion: typeof Bun !== "undefined" ? Bun.version : null,
-    nodeEnv: process.env.NODE_ENV ?? null,
-    vercel: process.env.VERCEL ?? null,
-  }))
-  .get("/", () => "Hello from Elysia on Vercel");
+  .get("/debug/db", async () => {
+    try {
+      const r = await db.select({ count: sql<number>`count(*)::int` }).from(sticker);
+      return { ok: true, count: r[0]?.count ?? 0 };
+    } catch (e) {
+      return { ok: false, error: String(e) };
+    }
+  })
+  .get("/", () => "Hello with Drizzle");
 
 if (process.env.VERCEL !== "1") {
   app.listen(3000);
