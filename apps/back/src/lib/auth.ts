@@ -42,7 +42,9 @@ export const auth = betterAuth({
   session: {
     cookieCache: {
       enabled: true,
-      maxAge: 5 * 60, // 5 minutos. Same-origin vía Vercel rewrite; el back refresca el cache automáticamente.
+      // Cross-origin: el front no propaga Set-Cookie del back, así que el cache no se
+      // refresca automáticamente. TTL = duración de la sesión (7 días).
+      maxAge: 7 * 24 * 60 * 60,
     },
   },
 });
