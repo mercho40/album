@@ -37,6 +37,14 @@ export const auth = betterAuth({
     },
   },
   trustedOrigins: [process.env.WEB_URL!],
+  // Cookies con Domain=.mersich.net para que el front (album.mersich.net) las lea
+  // aunque las setee el back (album-back.mersich.net).
+  advanced: {
+    crossSubDomainCookies: {
+      enabled: true,
+      domain: process.env.COOKIE_DOMAIN,
+    },
+  },
   // Joined session reads — one query instead of N on getSession.
   experimental: { joins: true },
   session: {
