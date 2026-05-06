@@ -5,22 +5,24 @@
 	import { Input } from "$lib/components/ui/input/index.js";
 	import { authClient } from "$lib/auth-client";
 	import { toast } from "svelte-sonner";
+	import Eye from "@lucide/svelte/icons/eye";
+	import EyeOff from "@lucide/svelte/icons/eye-off";
 
-	let name = $state("");
 	let email = $state("");
 	let password = $state("");
-	let confirmPassword = $state("");
+	let showPassword = $state(false);
 	let loading = $state(false);
+
+	function nameFromEmail(value: string) {
+		const local = value.split("@")[0] ?? "";
+		return local.replace(/[._-]+/g, " ").trim() || value;
+	}
 
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
-		if (password !== confirmPassword) {
-			toast.error("Las contraseñas no coinciden");
-			return;
-		}
 		loading = true;
 		await authClient.signUp.email(
-			{ email, password, name },
+			{ email, password, name: nameFromEmail(email) },
 			{
 				onSuccess: () => {
 					window.location.href = "/new-album";
@@ -37,27 +39,46 @@
 <Card.Root class="mx-auto w-full max-w-sm">
 	<Card.Header>
 		<Card.Title>Crear cuenta</Card.Title>
-		<Card.Description>Completá tus datos para crear la cuenta</Card.Description>
+		<Card.Description>Ingresá tu email y elegí una contraseña.</Card.Description>
 	</Card.Header>
 	<Card.Content>
 		<form onsubmit={handleSubmit}>
 			<Field.Group>
 				<Field.Field>
-					<Field.Label for="name">Nombre completo</Field.Label>
-					<Input id="name" type="text" placeholder="Nombre y apellido" required bind:value={name} />
-				</Field.Field>
-				<Field.Field>
 					<Field.Label for="email">Email</Field.Label>
-					<Input id="email" type="email" placeholder="m@example.com" required bind:value={email} />
+					<Input
+						id="email"
+						type="email"
+						placeholder="m@example.com"
+						required
+						bind:value={email}
+					/>
 				</Field.Field>
 				<Field.Field>
 					<Field.Label for="password">Contraseña</Field.Label>
-					<Input id="password" type="password" required bind:value={password} />
+					<div class="relative">
+						<Input
+							id="password"
+							type={showPassword ? "text" : "password"}
+							required
+							minlength={8}
+							bind:value={password}
+							class="pr-10"
+						/>
+						<button
+							type="button"
+							onclick={() => (showPassword = !showPassword)}
+							class="absolute inset-y-0 right-0 flex h-full w-10 items-center justify-center text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-r-md"
+							aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+						>
+							{#if showPassword}
+								<EyeOff class="size-4" />
+							{:else}
+								<Eye class="size-4" />
+							{/if}
+						</button>
+					</div>
 					<Field.Description>Mínimo 8 caracteres.</Field.Description>
-				</Field.Field>
-				<Field.Field>
-					<Field.Label for="confirm-password">Confirmar contraseña</Field.Label>
-					<Input id="confirm-password" type="password" required bind:value={confirmPassword} />
 				</Field.Field>
 				<Field.Group>
 					<Field.Field>

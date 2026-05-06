@@ -10,11 +10,14 @@
 	} from "$lib/components/ui/field/index.js";
 	import { authClient } from "$lib/auth-client";
 	import { toast } from "svelte-sonner";
+	import Eye from "@lucide/svelte/icons/eye";
+	import EyeOff from "@lucide/svelte/icons/eye-off";
 
 	const id = $props.id();
 
 	let email = $state("");
 	let password = $state("");
+	let showPassword = $state(false);
 	let loading = $state(false);
 
 	async function handleSubmit(e: Event) {
@@ -48,13 +51,28 @@
 					<Input id="email-{id}" type="email" placeholder="m@example.com" required bind:value={email} />
 				</Field>
 				<Field>
-					<div class="flex items-center">
-						<FieldLabel for="password-{id}">Contraseña</FieldLabel>
-						<!-- <a href="/forgot-password" class="ms-auto inline-block text-sm underline"> -->
-						<!-- 	Forgot your password? -->
-						<!-- </a> -->
+					<FieldLabel for="password-{id}">Contraseña</FieldLabel>
+					<div class="relative">
+						<Input
+							id="password-{id}"
+							type={showPassword ? "text" : "password"}
+							required
+							bind:value={password}
+							class="pr-10"
+						/>
+						<button
+							type="button"
+							onclick={() => (showPassword = !showPassword)}
+							class="absolute inset-y-0 right-0 flex h-full w-10 items-center justify-center text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-r-md"
+							aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+						>
+							{#if showPassword}
+								<EyeOff class="size-4" />
+							{:else}
+								<Eye class="size-4" />
+							{/if}
+						</button>
 					</div>
-					<Input id="password-{id}" type="password" required bind:value={password} />
 				</Field>
 				<Field>
 					<Button type="submit" class="w-full" disabled={loading}>
