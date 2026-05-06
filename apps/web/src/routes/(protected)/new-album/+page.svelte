@@ -47,7 +47,13 @@
 	<meta name="description" content="Creá un álbum para registrar tus figuritas y compartirlo con tu familia." />
 </svelte:head>
 
-<div class="flex min-h-svh items-center justify-center p-6 md:p-10">
+<div class="relative flex min-h-svh items-center justify-center p-6 md:p-10">
+	<a
+		href="/"
+		class="absolute top-4 left-4 inline-flex items-center gap-1 rounded-md px-2 py-1 text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:top-6 md:left-6"
+	>
+		← Inicio
+	</a>
 	<Card.Root class="mx-auto w-full max-w-md">
 		<Card.Header>
 			<Card.Title class="text-2xl">Nuevo álbum</Card.Title>
