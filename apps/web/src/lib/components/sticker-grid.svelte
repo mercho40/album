@@ -31,7 +31,8 @@
 		teamFilter = null;
 	}
 
-	const allTeams = $derived([...new Set(stickers.map((s) => s.team))].sort());
+	// Mantener orden de aparición (el back devuelve por createdAt = orden del seed = grupos A-L).
+	const allTeams = $derived([...new Set(stickers.map((s) => s.team))]);
 
 	const filteredStickers = $derived(
 		stickers.filter((s) => {
