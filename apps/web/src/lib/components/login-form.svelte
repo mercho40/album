@@ -37,8 +37,8 @@
 
 <Card.Root class="mx-auto w-full max-w-sm">
 	<Card.Header>
-		<Card.Title class="text-2xl">Login</Card.Title>
-		<Card.Description>Enter your email below to login to your account</Card.Description>
+		<Card.Title class="text-2xl">Iniciar sesión</Card.Title>
+		<Card.Description>Ingresá tu email para acceder a tu cuenta</Card.Description>
 	</Card.Header>
 	<Card.Content>
 		<form onsubmit={handleSubmit}>
@@ -49,7 +49,7 @@
 				</Field>
 				<Field>
 					<div class="flex items-center">
-						<FieldLabel for="password-{id}">Password</FieldLabel>
+						<FieldLabel for="password-{id}">Contraseña</FieldLabel>
 						<!-- <a href="/forgot-password" class="ms-auto inline-block text-sm underline"> -->
 						<!-- 	Forgot your password? -->
 						<!-- </a> -->
@@ -58,7 +58,7 @@
 				</Field>
 				<Field>
 					<Button type="submit" class="w-full" disabled={loading}>
-						{loading ? "Logging in..." : "Login"}
+						{loading ? "Ingresando..." : "Iniciar sesión"}
 					</Button>
 					<Button
 						variant="outline"
@@ -76,10 +76,10 @@
 								fill="currentColor"
 							/>
 						</svg>
-						Login with Google
+						Continuar con Google
 					</Button>
 					<FieldDescription class="text-center">
-						Don't have an account? <a href="/signup" class="underline">Sign up</a>
+						¿No tenés cuenta? <a href="/signup" class="underline">Registrate</a>
 					</FieldDescription>
 				</Field>
 			</FieldGroup>
