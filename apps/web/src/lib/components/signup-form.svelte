@@ -36,33 +36,33 @@
 
 <Card.Root class="mx-auto w-full max-w-sm">
 	<Card.Header>
-		<Card.Title>Create an account</Card.Title>
-		<Card.Description>Enter your information below to create your account</Card.Description>
+		<Card.Title>Crear cuenta</Card.Title>
+		<Card.Description>Completá tus datos para crear la cuenta</Card.Description>
 	</Card.Header>
 	<Card.Content>
 		<form onsubmit={handleSubmit}>
 			<Field.Group>
 				<Field.Field>
-					<Field.Label for="name">Full Name</Field.Label>
-					<Input id="name" type="text" placeholder="John Doe" required bind:value={name} />
+					<Field.Label for="name">Nombre completo</Field.Label>
+					<Input id="name" type="text" placeholder="Nombre y apellido" required bind:value={name} />
 				</Field.Field>
 				<Field.Field>
 					<Field.Label for="email">Email</Field.Label>
 					<Input id="email" type="email" placeholder="m@example.com" required bind:value={email} />
 				</Field.Field>
 				<Field.Field>
-					<Field.Label for="password">Password</Field.Label>
+					<Field.Label for="password">Contraseña</Field.Label>
 					<Input id="password" type="password" required bind:value={password} />
-					<Field.Description>Must be at least 8 characters long.</Field.Description>
+					<Field.Description>Mínimo 8 caracteres.</Field.Description>
 				</Field.Field>
 				<Field.Field>
-					<Field.Label for="confirm-password">Confirm Password</Field.Label>
+					<Field.Label for="confirm-password">Confirmar contraseña</Field.Label>
 					<Input id="confirm-password" type="password" required bind:value={confirmPassword} />
 				</Field.Field>
 				<Field.Group>
 					<Field.Field>
 						<Button type="submit" class="w-full" disabled={loading}>
-							{loading ? "Creating account..." : "Create Account"}
+							{loading ? "Creando cuenta..." : "Crear cuenta"}
 						</Button>
 						<Button
 							variant="outline"
@@ -80,10 +80,10 @@
 									fill="currentColor"
 								/>
 							</svg>
-							Sign up with Google
+							Continuar con Google
 						</Button>
 						<Field.Description class="px-6 text-center">
-							Already have an account? <a href="/login" class="underline">Sign in</a>
+							¿Ya tenés cuenta? <a href="/login" class="underline">Ingresá</a>
 						</Field.Description>
 					</Field.Field>
 				</Field.Group>
