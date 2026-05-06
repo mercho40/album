@@ -50,3 +50,6 @@ docs/
 
 # Consigna del TP
 *.pdf
+
+# Scripts de seed locales (no commitear)
+apps/back/scripts/set-user-inventory.ts
