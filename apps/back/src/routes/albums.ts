@@ -26,18 +26,30 @@ export const albumRoutes = new Elysia({ prefix: "/albums" })
     "/",
     async ({ body, request, status }) => {
       try {
+        // Si el slug ya existe, devolvemos 409 antes de delegar a Better Auth
+        // (que a veces devuelve un objeto inválido en vez de tirar excepción).
+        const [existing] = await db
+          .select({ id: organization.id })
+          .from(organization)
+          .where(eq(organization.slug, body.slug))
+          .limit(1);
+        if (existing) {
+          return status(409, {
+            error: { code: "SLUG_TAKEN", message: "Ese slug ya está en uso" },
+          });
+        }
+
         const created = await auth.api.createOrganization({
           headers: request.headers,
           body: { name: body.name, slug: body.slug },
         });
 
-        if (!created) {
+        if (!created || typeof created.slug !== "string" || typeof created.id !== "string") {
           return status(400, {
-            error: { code: "ORG_CREATE_FAILED", message: "No se pudo crear la organización" },
+            error: { code: "ORG_CREATE_FAILED", message: "No se pudo crear el álbum" },
           });
         }
 
-        // Patch album extension if extras were provided
         if (body.visibility || body.description) {
           await db
             .update(album)
@@ -53,7 +65,7 @@ export const albumRoutes = new Elysia({ prefix: "/albums" })
         const msg = e instanceof Error ? e.message : String(e);
         if (msg.toLowerCase().includes("slug")) {
           return status(409, {
-            error: { code: "SLUG_TAKEN", message: "Slug ya está en uso" },
+            error: { code: "SLUG_TAKEN", message: "Ese slug ya está en uso" },
           });
         }
         throw e;
