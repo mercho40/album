@@ -6,8 +6,8 @@
 		FieldGroup,
 		Field,
 		FieldLabel,
-		FieldDescription,
 	} from "$lib/components/ui/field/index.js";
+	import * as Select from "$lib/components/ui/select/index.js";
 	import { untrack } from "svelte";
 	import { toast } from "svelte-sonner";
 
@@ -20,8 +20,6 @@
 	});
 
 	let name = $state(untrack(() => form?.values?.name ?? ""));
-	let manualSlug = $state(untrack(() => form?.values?.slug ?? ""));
-	let userEditedSlug = $state(false);
 	let visibility = $state<"public" | "unlisted" | "private">("public");
 	let submitting = $state(false);
 
@@ -35,7 +33,13 @@
 			.slice(0, 64);
 	}
 
-	let slug = $derived(userEditedSlug ? manualSlug : slugify(name));
+	const slug = $derived(slugify(name));
+
+	const visibilityLabels = {
+		public: "Público",
+		unlisted: "Solo con el link",
+		private: "Privado (solo miembros)",
+	} as const;
 </script>
 
 <svelte:head>
@@ -59,39 +63,21 @@
 
 					<input type="hidden" name="slug" value={slug} />
 					<input type="hidden" name="visibility" value={visibility} />
-					<input type="hidden" name="slugAuto" value={String(!userEditedSlug)} />
+					<input type="hidden" name="slugAuto" value="true" />
 
-					<details class="group">
-						<summary class="cursor-pointer text-sm text-muted-foreground select-none">
-							Opciones avanzadas
-						</summary>
-						<div class="mt-3 space-y-4">
-							<Field>
-								<FieldLabel for="slug-edit">Slug (URL)</FieldLabel>
-								<Input
-									id="slug-edit"
-									value={slug}
-									oninput={(e) => {
-										userEditedSlug = true;
-										manualSlug = (e.target as HTMLInputElement).value;
-									}}
-								/>
-								<FieldDescription>Solo minúsculas, números y guiones.</FieldDescription>
-							</Field>
-							<Field>
-								<FieldLabel for="visibility-edit">Visibilidad</FieldLabel>
-								<select
-									id="visibility-edit"
-									bind:value={visibility}
-									class="h-9 rounded-md border bg-background px-3 text-sm"
-								>
-									<option value="public">Público</option>
-									<option value="unlisted">Solo con el link</option>
-									<option value="private">Privado</option>
-								</select>
-							</Field>
-						</div>
-					</details>
+					<Field>
+						<FieldLabel for="visibility-trigger">Visibilidad</FieldLabel>
+						<Select.Root type="single" bind:value={visibility as string}>
+							<Select.Trigger id="visibility-trigger" class="w-full">
+								{visibilityLabels[visibility]}
+							</Select.Trigger>
+							<Select.Content>
+								<Select.Item value="public">Público</Select.Item>
+								<Select.Item value="unlisted">Solo con el link</Select.Item>
+								<Select.Item value="private">Privado (solo miembros)</Select.Item>
+							</Select.Content>
+						</Select.Root>
+					</Field>
 
 					<Field>
 						<Button type="submit" class="w-full" disabled={submitting}>
