@@ -59,6 +59,7 @@
 
 					<input type="hidden" name="slug" value={slug} />
 					<input type="hidden" name="visibility" value={visibility} />
+					<input type="hidden" name="slugAuto" value={String(!userEditedSlug)} />
 
 					<details class="group">
 						<summary class="cursor-pointer text-sm text-muted-foreground select-none">
