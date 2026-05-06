@@ -127,11 +127,11 @@
 						</Card.Root>
 					</a>
 				{/each}
-				<a href="/new-album">
-					<Card.Root class="h-full border-dashed transition hover:border-primary">
-						<Card.Header class="text-center">
-							<Card.Title class="text-muted-foreground">+ Nuevo álbum</Card.Title>
-						</Card.Header>
+				<a href="/new-album" class="block">
+					<Card.Root
+						class="flex h-full min-h-[7rem] items-center justify-center border-dashed transition hover:border-primary"
+					>
+						<p class="text-sm font-medium text-muted-foreground">+ Nuevo álbum</p>
 					</Card.Root>
 				</a>
 			</div>
