@@ -8,6 +8,7 @@
 		FieldLabel,
 	} from "$lib/components/ui/field/index.js";
 	import * as Select from "$lib/components/ui/select/index.js";
+	import BackLink from "$lib/components/back-link.svelte";
 	import { untrack } from "svelte";
 	import { toast } from "svelte-sonner";
 
@@ -48,12 +49,7 @@
 </svelte:head>
 
 <div class="relative flex min-h-svh items-center justify-center p-6 md:p-10">
-	<a
-		href="/"
-		class="absolute top-4 left-4 inline-flex items-center gap-1 rounded-md px-2 py-1 text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:top-6 md:left-6"
-	>
-		← Inicio
-	</a>
+	<BackLink class="absolute top-2 left-2 md:top-4 md:left-4" />
 	<Card.Root class="mx-auto w-full max-w-md">
 		<Card.Header>
 			<Card.Title class="text-2xl">Nuevo álbum</Card.Title>
