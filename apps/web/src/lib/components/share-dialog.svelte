@@ -1,5 +1,6 @@
 <script lang="ts">
 	import * as Dialog from "$lib/components/ui/dialog/index.js";
+	import * as AlertDialog from "$lib/components/ui/alert-dialog/index.js";
 	import * as Avatar from "$lib/components/ui/avatar/index.js";
 	import { Button, buttonVariants } from "$lib/components/ui/button/index.js";
 	import { Input } from "$lib/components/ui/input/index.js";
@@ -107,13 +108,8 @@
 		}
 	}
 
-	async function removeMember(userId: string, name: string) {
+	async function performRemove(userId: string, name: string) {
 		const isSelf = userId === currentUserId;
-		const message = isSelf
-			? "¿Salir del álbum? Vas a perder acceso."
-			: `¿Quitar a ${name} del álbum?`;
-		if (!confirm(message)) return;
-
 		const prev = members;
 		members = members.filter((m) => m.userId !== userId);
 
@@ -202,15 +198,34 @@
 							{roleLabel(m.role)}
 						</span>
 						{#if canManage && m.role !== "owner" && m.userId !== currentUserId}
-							<Button
-								variant="ghost"
-								size="icon"
-								class="size-8 shrink-0"
-								aria-label="Quitar a {m.name}"
-								onclick={() => removeMember(m.userId, m.name)}
-							>
-								<XIcon class="size-4" />
-							</Button>
+							<AlertDialog.Root>
+								<AlertDialog.Trigger
+									aria-label="Quitar a {m.name}"
+									class={cn(
+										buttonVariants({ variant: "ghost", size: "icon" }),
+										"size-8 shrink-0",
+									)}
+								>
+									<XIcon class="size-4" />
+								</AlertDialog.Trigger>
+								<AlertDialog.Content>
+									<AlertDialog.Header>
+										<AlertDialog.Title>¿Quitar a {m.name}?</AlertDialog.Title>
+										<AlertDialog.Description>
+											No va a poder marcar figuritas en este álbum. Podés volver a invitarlo más adelante.
+										</AlertDialog.Description>
+									</AlertDialog.Header>
+									<AlertDialog.Footer>
+										<AlertDialog.Cancel>Cancelar</AlertDialog.Cancel>
+										<AlertDialog.Action
+											class={cn(buttonVariants({ variant: "destructive" }))}
+											onclick={() => performRemove(m.userId, m.name)}
+										>
+											Quitar
+										</AlertDialog.Action>
+									</AlertDialog.Footer>
+								</AlertDialog.Content>
+							</AlertDialog.Root>
 						{/if}
 					</div>
 				{/each}
@@ -245,15 +260,35 @@
 		<!-- Self-leave (editor only) -->
 		{#if isEditor && currentUserId}
 			<div class="border-t pt-4">
-				<Button
-					variant="ghost"
-					size="sm"
-					class="text-destructive hover:bg-destructive/10 hover:text-destructive"
-					onclick={() => removeMember(currentUserId!, "vos")}
-				>
-					<LogOutIcon class="size-4" />
-					Salir del álbum
-				</Button>
+				<AlertDialog.Root>
+					<AlertDialog.Trigger
+						class={cn(
+							buttonVariants({ variant: "ghost", size: "sm" }),
+							"text-destructive hover:bg-destructive/10 hover:text-destructive",
+						)}
+					>
+						<LogOutIcon class="size-4" />
+						Salir del álbum
+					</AlertDialog.Trigger>
+					<AlertDialog.Content>
+						<AlertDialog.Header>
+							<AlertDialog.Title>¿Salir del álbum?</AlertDialog.Title>
+							<AlertDialog.Description>
+								Vas a perder acceso. El propietario va a tener que volver a invitarte si querés
+								volver a entrar.
+							</AlertDialog.Description>
+						</AlertDialog.Header>
+						<AlertDialog.Footer>
+							<AlertDialog.Cancel>Cancelar</AlertDialog.Cancel>
+							<AlertDialog.Action
+								class={cn(buttonVariants({ variant: "destructive" }))}
+								onclick={() => performRemove(currentUserId!, "vos")}
+							>
+								Salir
+							</AlertDialog.Action>
+						</AlertDialog.Footer>
+					</AlertDialog.Content>
+				</AlertDialog.Root>
 			</div>
 		{/if}
 	</Dialog.Content>
