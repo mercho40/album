@@ -2,7 +2,7 @@
 
 App web para registrar las figuritas del álbum Panini Mundial 2026: marcá las que tenés y las repetidas, compartí tu álbum con familia o amigos para llevar la cuenta entre varios. Próximamente: encontrá automáticamente con quién podés intercambiar.
 
-🌐 **Demo:** _por publicar — ver `docs/superpowers/plans/2026-05-02-album-mvp1-plan.md` Phase 5 para el setup_
+🌐 **Demo:** [album.mersich.net](https://album.mersich.net) (deploy automático desde `main`)
 📦 **Repo:** [github.com/mercho40/album](https://github.com/mercho40/album)
 
 ## Integrantes
@@ -20,8 +20,10 @@ App web para registrar las figuritas del álbum Panini Mundial 2026: marcá las 
 
 ## Funcionalidades (MVP2 — en desarrollo)
 
-- 🚧 Catálogo completo (~670 figuritas)
-- 🚧 Compartir álbum con otros usuarios (invitaciones, roles `editor` / `admin`)
+- ✅ Compartir álbum: agregar miembros por email (si ya tienen cuenta) con rol `editor`; quitar miembros; salir del álbum (#52, #56)
+- ✅ Configuración del álbum: editar nombre/descripción/visibilidad y eliminar el álbum (#52)
+- ✅ Copiar link del álbum al portapapeles desde el header (#58)
+- 🚧 Invitaciones por email (sin email provider configurado todavía — por ahora solo direct-add)
 - 🚧 Directorio público + matchmaker (encontrar con quién intercambiar automáticamente)
 - 🚧 Propuestas de intercambio con máquina de estados (`pending` → `accepted` → `completed`)
 - 🚧 Avatar de usuario (CDN: Vercel Blob)
@@ -61,6 +63,14 @@ El front es SvelteKit con `@sveltejs/adapter-vercel`. El back es Elysia + Bun + 
 
 ### 6. Permisos resueltos server-side
 El layout server load del álbum calcula `canView`, `canEdit`, `canManage` en base al rol del miembro (o ausencia de rol para visitantes). El front solo muestra/oculta controles según los flags. Los endpoints **también** validan permisos (no confían en el front).
+
+Roles actuales: `owner` (creador, único que puede editar metadata o eliminar) y `editor` (invitado, puede marcar figuritas). Visitantes (no miembros) ven el álbum si `visibility !== "private"` pero no pueden marcar.
+
+### 7. Sharing sin email provider
+El owner agrega miembros tipeando un email; el back lo busca en la tabla `user`. Si la persona ya tiene cuenta, se inserta una fila en `member` con rol `editor`. Si no, devuelve 404 con un mensaje pidiendo que se registre primero. Sin email provider ni share-links — minimum viable hasta tener Resend o similar configurado.
+
+### 8. Streaming load para figuritas
+`/albums/:slug/+page.server.ts` devuelve la promesa de figuritas sin `await`. SvelteKit la stremea al browser, así el layout (metadata + rol, ~150ms) renderiza el header del álbum apenas resuelve y la grilla cae después con su skeleton. El click en un álbum desde el home se siente ~3× más rápido que esperar las 994 figuritas antes de pintar nada.
 
 ## Setup local
 
@@ -114,8 +124,10 @@ bun run dev
 ## Versionado
 
 SemVer:
-- `v0.1.0` — MVP1 (esta release): álbum + marcar figuritas + deploy.
-- `v0.2.0` — Sprint social: compartir álbum, directorio, avatar.
+- `v0.1.0` — MVP1: álbum + marcar figuritas + deploy.
+- `v0.4.x` — Polish UX (skeletons, mobile padding, header redesign, navegación).
+- `v0.5.x` — Sprint social parcial: compartir álbum (direct-add), configuración del álbum, eliminar.
+- `v0.6.x` — Sprint social completo (pendiente): invitaciones por email, directorio, avatar.
 - `v1.0.0` — Entrega final: matchmaker + trades.
 
 ## Scripts
@@ -151,9 +163,9 @@ apps/
       db/seed.ts                     Script de seed (idempotente)
       routes/_shared.ts              Macro betterAuth con resolve de session
       routes/catalog.ts              GET /catalog/:id/stickers + detalle
-      routes/albums.ts               POST/GET/check-slug de álbumes
+      routes/albums.ts               CRUD de álbumes + members (add/remove/list) + PATCH/DELETE
       routes/album-stickers.ts       GET/PATCH inventario del álbum
-    seed/wc2026.json                 Catálogo (44 figuritas hoy)
+    seed/wc2026.json                 Catálogo completo (994 figuritas)
     migrations/                      SQL generado por drizzle-kit
     vercel.json                      Deploy en Vercel (Bun runtime)
 
@@ -163,14 +175,20 @@ apps/
       lib/api.ts                     createApi(fetch) → Eden Treaty client
       lib/auth-client.ts             Better Auth client (organization plugin)
       lib/components/
-        sticker-card.svelte            Card de figurita con +/-
-        sticker-grid.svelte            Grilla agrupada por equipo
+        back-link.svelte               BackLink unificado (icono chevron)
+        sticker-card.svelte            Card compacta con número como hero
+        sticker-grid.svelte            Grilla agrupada por equipo + filtros
+        share-dialog.svelte            Dialog de miembros (agregar/quitar/salir)
+        login-form.svelte              Form de login
+        signup-form.svelte             Form de signup
+        theme-toggle.svelte            Toggle de tema (landing logged-out)
         ui/                            shadcn-svelte primitives
       routes/
-        +page.svelte                   Landing
+        +page.svelte                   Landing (logged-out) / lista de álbumes (logged-in)
         login/, signup/                Auth pages
         directory/                     (MVP2)
         albums/[slug]/                 Vista universal (read+edit según permisos)
+          settings/                    Config del álbum (solo owner)
         (protected)/
           new-album/                   Form de creación
           me/                          Editar perfil (MVP2)
