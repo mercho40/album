@@ -10,7 +10,6 @@
 	import { enhance } from "$app/forms";
 	import { untrack } from "svelte";
 	import { cn } from "$lib/utils";
-	import ChevronLeftIcon from "@lucide/svelte/icons/chevron-left";
 
 	let { data, form } = $props();
 
@@ -38,14 +37,6 @@
 <svelte:head>
 	<title>Configuración · {data.album.name}</title>
 </svelte:head>
-
-<a
-	href="/albums/{data.album.slug}"
-	class="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground transition hover:text-foreground"
->
-	<ChevronLeftIcon class="size-4" />
-	Volver al álbum
-</a>
 
 <div class="max-w-2xl space-y-6">
 	<Card.Root>

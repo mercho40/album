@@ -7,8 +7,13 @@
 	import { buttonVariants } from "$lib/components/ui/button/index.js";
 	import { cn } from "$lib/utils";
 	import { toast } from "svelte-sonner";
+	import { page } from "$app/state";
 
 	let { data, children } = $props();
+
+	// En sub-rutas (settings, etc.) el back lleva al álbum; en la raíz del álbum, al home.
+	const albumPath = $derived(`/albums/${data.album.slug}`);
+	const backHref = $derived(page.url.pathname === albumPath ? "/" : albumPath);
 
 	let copied = $state(false);
 	let copyTimer: ReturnType<typeof setTimeout> | undefined;
@@ -35,7 +40,7 @@
 <div class="mx-auto max-w-6xl px-4 py-6 md:p-10">
 	<header class="mb-6">
 		<div class="flex items-center gap-2">
-			<BackLink class="-ml-2" />
+			<BackLink href={backHref} class="-ml-2" />
 			<h1 class="min-w-0 flex-1 truncate text-3xl font-bold">{data.album.name}</h1>
 			<button
 				type="button"
