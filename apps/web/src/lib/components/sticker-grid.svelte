@@ -47,7 +47,7 @@
 		window.scrollTo({ top: Math.max(0, target), behavior: "smooth" });
 	}
 
-	// Preservar orden de aparición = orden del seed = grupos A-L (mismo orden que las secciones).
+	// Mantener orden de aparición (el back devuelve por createdAt = orden del seed = grupos A-L).
 	const allTeams = $derived([...new Set(stickers.map((s) => s.team))]);
 
 	const filteredStickers = $derived(
