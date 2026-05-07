@@ -5,7 +5,6 @@
 	import * as Empty from "$lib/components/ui/empty/index.js";
 	import * as Avatar from "$lib/components/ui/avatar/index.js";
 	import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
-	import * as Item from "$lib/components/ui/item/index.js";
 	import { Skeleton } from "$lib/components/ui/skeleton/index.js";
 	import ThemeToggle from "$lib/components/theme-toggle.svelte";
 	import { navigating } from "$app/state";
@@ -95,52 +94,35 @@
 			</div>
 
 			<DropdownMenu.Root>
-				<DropdownMenu.Trigger>
-					{#snippet child({ props })}
-						<button
-							{...props}
-							aria-label="Cuenta"
-							class="shrink-0 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-						>
-							<Avatar.Root class="size-9">
-								{#if data.user?.image}
-									<Avatar.Image src={data.user.image} alt={data.user.name ?? ""} />
-								{/if}
-								<Avatar.Fallback class="text-sm font-medium">
-									{initials(data.user?.name)}
-								</Avatar.Fallback>
-							</Avatar.Root>
-						</button>
-					{/snippet}
+				<DropdownMenu.Trigger
+					aria-label="Cuenta"
+					class="shrink-0 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+				>
+					<Avatar.Root class="size-9">
+						{#if data.user?.image}
+							<Avatar.Image src={data.user.image} alt={data.user.name ?? ""} />
+						{/if}
+						<Avatar.Fallback class="text-sm font-medium">
+							{initials(data.user?.name)}
+						</Avatar.Fallback>
+					</Avatar.Root>
 				</DropdownMenu.Trigger>
 
 				<DropdownMenu.Content align="end" class="w-64">
-					<Item.Root size="sm" class="p-2">
-						<Item.Media>
-							<Avatar.Root class="size-8">
-								{#if data.user?.image}
-									<Avatar.Image src={data.user.image} alt={data.user.name ?? ""} />
-								{/if}
-								<Avatar.Fallback class="text-xs font-medium">
-									{initials(data.user?.name)}
-								</Avatar.Fallback>
-							</Avatar.Root>
-						</Item.Media>
-						<Item.Content class="gap-0.5">
-							<Item.Title class="truncate">{data.user?.name}</Item.Title>
-							{#if data.user?.email}
-								<Item.Description class="truncate">{data.user.email}</Item.Description>
-							{/if}
-						</Item.Content>
-					</Item.Root>
+					<DropdownMenu.Label class="flex flex-col gap-0.5 font-normal">
+						<span class="truncate text-sm font-medium">{data.user?.name}</span>
+						{#if data.user?.email}
+							<span class="truncate text-xs text-muted-foreground">{data.user.email}</span>
+						{/if}
+					</DropdownMenu.Label>
 
 					<DropdownMenu.Separator />
 
-					<DropdownMenu.GroupHeading>Tema</DropdownMenu.GroupHeading>
 					<DropdownMenu.RadioGroup
 						value={userPrefersMode.current}
 						onValueChange={(v) => setMode(v as "light" | "dark" | "system")}
 					>
+						<DropdownMenu.GroupHeading>Tema</DropdownMenu.GroupHeading>
 						<DropdownMenu.RadioItem value="light">
 							<SunIcon />
 							Claro
