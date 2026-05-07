@@ -1,14 +1,15 @@
 <script lang="ts">
-	import { Button } from "$lib/components/ui/button/index.js";
+	import { Button, buttonVariants } from "$lib/components/ui/button/index.js";
 	import * as Card from "$lib/components/ui/card/index.js";
 	import { Input } from "$lib/components/ui/input/index.js";
 	import { Label } from "$lib/components/ui/label/index.js";
 	import * as Select from "$lib/components/ui/select/index.js";
 	import * as Field from "$lib/components/ui/field/index.js";
-	import { Separator } from "$lib/components/ui/separator/index.js";
+	import * as AlertDialog from "$lib/components/ui/alert-dialog/index.js";
 	import { toast } from "svelte-sonner";
 	import { enhance } from "$app/forms";
 	import { untrack } from "svelte";
+	import { cn } from "$lib/utils";
 	import ChevronLeftIcon from "@lucide/svelte/icons/chevron-left";
 
 	let { data, form } = $props();
@@ -20,6 +21,7 @@
 	);
 	let saving = $state(false);
 	let deleting = $state(false);
+	let deleteFormEl: HTMLFormElement | undefined = $state();
 
 	const visibilityLabels = {
 		public: "Público",
@@ -31,18 +33,6 @@
 		if (form?.error) toast.error(form.error);
 		if (form?.success) toast.success("Álbum actualizado");
 	});
-
-	function confirmDelete(e: SubmitEvent) {
-		if (
-			!confirm(
-				`¿Eliminar "${data.album.name}"? Vas a perder todas las figuritas marcadas y los miembros del álbum. Esta acción no se puede deshacer.`,
-			)
-		) {
-			e.preventDefault();
-			return;
-		}
-		deleting = true;
-	}
 </script>
 
 <svelte:head>
@@ -130,10 +120,45 @@
 			</Card.Description>
 		</Card.Header>
 		<Card.Content>
-			<form method="POST" action="?/delete" onsubmit={confirmDelete}>
-				<Button type="submit" variant="destructive" disabled={deleting}>
-					{deleting ? "Eliminando..." : "Eliminar álbum"}
-				</Button>
+			<form
+				bind:this={deleteFormEl}
+				method="POST"
+				action="?/delete"
+				use:enhance={() => {
+					deleting = true;
+					return async ({ update }) => {
+						await update();
+						deleting = false;
+					};
+				}}
+			>
+				<AlertDialog.Root>
+					<AlertDialog.Trigger
+						type="button"
+						disabled={deleting}
+						class={cn(buttonVariants({ variant: "destructive" }))}
+					>
+						{deleting ? "Eliminando..." : "Eliminar álbum"}
+					</AlertDialog.Trigger>
+					<AlertDialog.Content>
+						<AlertDialog.Header>
+							<AlertDialog.Title>¿Eliminar "{data.album.name}"?</AlertDialog.Title>
+							<AlertDialog.Description>
+								Vas a perder todas las figuritas marcadas y los miembros del álbum. Esta acción no
+								se puede deshacer.
+							</AlertDialog.Description>
+						</AlertDialog.Header>
+						<AlertDialog.Footer>
+							<AlertDialog.Cancel>Cancelar</AlertDialog.Cancel>
+							<AlertDialog.Action
+								class={cn(buttonVariants({ variant: "destructive" }))}
+								onclick={() => deleteFormEl?.requestSubmit()}
+							>
+								Eliminar
+							</AlertDialog.Action>
+						</AlertDialog.Footer>
+					</AlertDialog.Content>
+				</AlertDialog.Root>
 			</form>
 		</Card.Content>
 	</Card.Root>
