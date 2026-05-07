@@ -177,7 +177,7 @@
 		{#each teams as team (team)}
 			<section>
 				<h2 class="mb-3 text-lg font-semibold">{team}</h2>
-				<div class="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-6">
+				<div class="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
 					{#each groupedByTeam[team] as s (s.stickerId)}
 						<StickerCard
 							stickerId={s.stickerId}
