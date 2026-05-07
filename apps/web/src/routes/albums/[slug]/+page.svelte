@@ -1,17 +1,29 @@
 <script lang="ts">
 	import StickerGrid from "$lib/components/sticker-grid.svelte";
 	import { Skeleton } from "$lib/components/ui/skeleton/index.js";
+	import { Button } from "$lib/components/ui/button/index.js";
+	import * as Empty from "$lib/components/ui/empty/index.js";
 	import { PUBLIC_API_URL } from "$env/static/public";
 	import type { PageData } from "./$types";
-	import { navigating } from "$app/state";
 	import { toast } from "svelte-sonner";
+	import AlertTriangleIcon from "@lucide/svelte/icons/alert-triangle";
 
 	let { data }: { data: PageData } = $props();
-	// Local mutable copy for optimistic updates; $effect syncs when server data changes.
-	let stickers: PageData["stickers"] = $state([]);
+
+	type Sticker = Awaited<PageData["stickers"]>[number];
+
+	// Copia local mutable para optimistic updates. El $effect re-sincroniza
+	// cuando data.stickers cambia (al navegar a otro álbum).
+	let stickers = $state<Sticker[]>([]);
 
 	$effect(() => {
-		stickers = data.stickers;
+		let cancelled = false;
+		data.stickers.then((s) => {
+			if (!cancelled) stickers = s;
+		});
+		return () => {
+			cancelled = true;
+		};
 	});
 
 	async function updateCount(stickerId: string, count: number) {
@@ -39,7 +51,7 @@
 	}
 </script>
 
-{#if navigating.to?.url.pathname.startsWith("/albums/")}
+{#await data.stickers}
 	<div class="space-y-6" aria-busy="true" aria-live="polite">
 		<!-- Filter panel -->
 		<div class="space-y-3">
@@ -72,6 +84,19 @@
 			</section>
 		{/each}
 	</div>
-{:else}
+{:then _}
 	<StickerGrid stickers={stickers} mode={data.canEdit ? "edit" : "view"} onUpdate={updateCount} />
-{/if}
+{:catch}
+	<Empty.Root class="rounded-lg border bg-muted/30">
+		<Empty.Header>
+			<Empty.Media variant="icon">
+				<AlertTriangleIcon />
+			</Empty.Media>
+			<Empty.Title>No se pudieron cargar las figuritas</Empty.Title>
+			<Empty.Description>Probá recargar la página.</Empty.Description>
+		</Empty.Header>
+		<Empty.Content>
+			<Button variant="outline" size="sm" onclick={() => location.reload()}>Recargar</Button>
+		</Empty.Content>
+	</Empty.Root>
+{/await}
