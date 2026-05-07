@@ -76,9 +76,9 @@
 		{#each Array(2) as _, si (si)}
 			<section>
 				<Skeleton class="mb-3 h-6 w-24" />
-				<div class="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-6">
-					{#each Array(8) as _, ci (ci)}
-						<Skeleton class="h-48 w-full rounded-lg" />
+				<div class="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
+					{#each Array(12) as _, ci (ci)}
+						<Skeleton class="h-24 w-full rounded-lg" />
 					{/each}
 				</div>
 			</section>
