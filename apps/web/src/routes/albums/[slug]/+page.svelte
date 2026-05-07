@@ -39,24 +39,34 @@
 	}
 </script>
 
-{#if navigating.to}
-	<div class="space-y-6">
-		<div class="space-y-1">
-			<Skeleton class="h-5 w-32" />
-			<Skeleton class="h-1.5 w-full" />
+{#if navigating.to?.url.pathname.startsWith("/albums/")}
+	<div class="space-y-6" aria-busy="true" aria-live="polite">
+		<!-- Filter panel -->
+		<div class="space-y-3">
+			<Skeleton class="h-9 w-full md:max-w-sm" />
+			<div class="flex flex-wrap gap-2">
+				<Skeleton class="h-9 w-20 rounded-full" />
+				<Skeleton class="h-9 w-24 rounded-full" />
+				<Skeleton class="h-9 w-24 rounded-full" />
+			</div>
+			<div class="-mx-4 overflow-hidden md:-mx-10">
+				<div class="flex gap-2 px-4 md:px-10">
+					{#each [60, 64, 72, 56, 68, 60, 76, 64, 72, 60, 68, 64] as w, i (i)}
+						<div class="shrink-0" style="width: {w}px">
+							<Skeleton class="h-9 w-full rounded-full" />
+						</div>
+					{/each}
+				</div>
+			</div>
 		</div>
-		<Skeleton class="h-10 w-full md:max-w-sm" />
-		<div class="flex gap-2">
-			<Skeleton class="h-9 w-20 rounded-full" />
-			<Skeleton class="h-9 w-24 rounded-full" />
-			<Skeleton class="h-9 w-24 rounded-full" />
-		</div>
+
+		<!-- Sticker sections -->
 		{#each Array(2) as _, si (si)}
 			<section>
-				<Skeleton class="mb-3 h-6 w-32" />
+				<Skeleton class="mb-3 h-6 w-24" />
 				<div class="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-6">
 					{#each Array(8) as _, ci (ci)}
-						<Skeleton class="h-48 w-full" />
+						<Skeleton class="h-48 w-full rounded-lg" />
 					{/each}
 				</div>
 			</section>
