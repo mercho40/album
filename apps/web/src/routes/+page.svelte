@@ -2,11 +2,29 @@
 	import { authClient } from "$lib/auth-client";
 	import { Button } from "$lib/components/ui/button/index.js";
 	import * as Card from "$lib/components/ui/card/index.js";
+	import * as Empty from "$lib/components/ui/empty/index.js";
+	import * as Avatar from "$lib/components/ui/avatar/index.js";
+	import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
+	import * as Item from "$lib/components/ui/item/index.js";
 	import { Skeleton } from "$lib/components/ui/skeleton/index.js";
 	import ThemeToggle from "$lib/components/theme-toggle.svelte";
 	import { navigating } from "$app/state";
+	import { userPrefersMode, setMode } from "mode-watcher";
+	import LogOutIcon from "@lucide/svelte/icons/log-out";
+	import BookOpenIcon from "@lucide/svelte/icons/book-open";
+	import SunIcon from "@lucide/svelte/icons/sun";
+	import MoonIcon from "@lucide/svelte/icons/moon";
+	import MonitorIcon from "@lucide/svelte/icons/monitor";
 
 	let { data } = $props();
+
+	function initials(name?: string | null) {
+		if (!name) return "?";
+		const parts = name.trim().split(/\s+/).filter(Boolean);
+		const first = parts[0]?.[0] ?? "";
+		const second = parts[1]?.[0] ?? "";
+		return (first + second).toUpperCase() || "?";
+	}
 </script>
 
 <svelte:head>
@@ -69,47 +87,117 @@
 	</div>
 {:else}
 	<!-- Logged in: my albums -->
-	<div class="mx-auto max-w-4xl p-6 md:p-10">
-		<header class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-			<div>
-				<h1 class="text-3xl font-bold">Hola, {data.user?.name}</h1>
+	<div class="mx-auto max-w-4xl px-4 py-6 md:p-10">
+		<header class="mb-8 flex items-start justify-between gap-3">
+			<div class="min-w-0">
+				<h1 class="truncate text-3xl font-bold">Hola, {data.user?.name}</h1>
 				<p class="text-muted-foreground">Tus álbumes de figuritas</p>
 			</div>
-			<div class="flex items-center gap-2">
-				<ThemeToggle />
-				<Button
-					variant="outline"
-					onclick={async () => {
-						await authClient.signOut();
-						window.location.href = "/";
-					}}
-				>
-					Cerrar sesión
-				</Button>
-			</div>
+
+			<DropdownMenu.Root>
+				<DropdownMenu.Trigger>
+					{#snippet child({ props })}
+						<button
+							{...props}
+							aria-label="Cuenta"
+							class="shrink-0 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+						>
+							<Avatar.Root class="size-9">
+								{#if data.user?.image}
+									<Avatar.Image src={data.user.image} alt={data.user.name ?? ""} />
+								{/if}
+								<Avatar.Fallback class="text-sm font-medium">
+									{initials(data.user?.name)}
+								</Avatar.Fallback>
+							</Avatar.Root>
+						</button>
+					{/snippet}
+				</DropdownMenu.Trigger>
+
+				<DropdownMenu.Content align="end" class="w-64">
+					<Item.Root size="sm" class="p-2">
+						<Item.Media>
+							<Avatar.Root class="size-8">
+								{#if data.user?.image}
+									<Avatar.Image src={data.user.image} alt={data.user.name ?? ""} />
+								{/if}
+								<Avatar.Fallback class="text-xs font-medium">
+									{initials(data.user?.name)}
+								</Avatar.Fallback>
+							</Avatar.Root>
+						</Item.Media>
+						<Item.Content class="gap-0.5">
+							<Item.Title class="truncate">{data.user?.name}</Item.Title>
+							{#if data.user?.email}
+								<Item.Description class="truncate">{data.user.email}</Item.Description>
+							{/if}
+						</Item.Content>
+					</Item.Root>
+
+					<DropdownMenu.Separator />
+
+					<DropdownMenu.GroupHeading>Tema</DropdownMenu.GroupHeading>
+					<DropdownMenu.RadioGroup
+						value={userPrefersMode.current}
+						onValueChange={(v) => setMode(v as "light" | "dark" | "system")}
+					>
+						<DropdownMenu.RadioItem value="light">
+							<SunIcon />
+							Claro
+						</DropdownMenu.RadioItem>
+						<DropdownMenu.RadioItem value="dark">
+							<MoonIcon />
+							Oscuro
+						</DropdownMenu.RadioItem>
+						<DropdownMenu.RadioItem value="system">
+							<MonitorIcon />
+							Sistema
+						</DropdownMenu.RadioItem>
+					</DropdownMenu.RadioGroup>
+
+					<DropdownMenu.Separator />
+
+					<DropdownMenu.Item
+						variant="destructive"
+						onclick={async () => {
+							await authClient.signOut();
+							window.location.href = "/";
+						}}
+					>
+						<LogOutIcon />
+						Cerrar sesión
+					</DropdownMenu.Item>
+				</DropdownMenu.Content>
+			</DropdownMenu.Root>
 		</header>
 
-		{#if navigating.to}
-			<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+		{#if navigating.to?.url.pathname === "/"}
+			<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3" aria-busy="true" aria-live="polite">
 				{#each Array(3) as _, i (i)}
-					<div class="rounded-lg border p-6">
-						<Skeleton class="mb-2 h-6 w-2/3" />
-						<Skeleton class="h-4 w-1/3" />
+					<div class="rounded-xl border bg-card p-6">
+						<Skeleton class="mb-2 h-5 w-3/5" />
+						<Skeleton class="h-4 w-2/5" />
 					</div>
 				{/each}
+				<div class="flex min-h-[7rem] items-center justify-center rounded-xl border border-dashed">
+					<Skeleton class="h-4 w-28" />
+				</div>
 			</div>
 		{:else if data.albums.length === 0}
-			<Card.Root class="mx-auto max-w-md text-center">
-				<Card.Header>
-					<Card.Title>Empezá tu primer álbum</Card.Title>
-					<Card.Description>
+			<Empty.Root class="mx-auto max-w-md rounded-lg border">
+				<Empty.Header>
+					<Empty.Media variant="icon">
+						<BookOpenIcon />
+					</Empty.Media>
+					<Empty.Title>Empezá tu primer álbum</Empty.Title>
+					<Empty.Description>
 						Creá un álbum para registrar tus figuritas y encontrar con quién intercambiar.
-					</Card.Description>
-				</Card.Header>
-				<Card.Content>
-					<Button href="/new-album" class="w-full">Crear álbum</Button>
-				</Card.Content>
-			</Card.Root>
+					</Empty.Description>
+				</Empty.Header>
+				<Empty.Content>
+					<Button href="/new-album">Crear álbum</Button>
+				</Empty.Content>
+			</Empty.Root>
 		{:else}
 			<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 				{#each data.albums as album (album.id)}

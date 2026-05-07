@@ -53,3 +53,4 @@ docs/
 
 # Scripts de seed locales (no commitear)
 apps/back/scripts/set-user-inventory.ts
+apps/back/scripts/set-user-inventory.sql
