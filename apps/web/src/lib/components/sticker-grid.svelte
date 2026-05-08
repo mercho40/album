@@ -5,7 +5,16 @@
 	import { Button } from "$lib/components/ui/button/index.js";
 	import * as Empty from "$lib/components/ui/empty/index.js";
 	import SearchXIcon from "@lucide/svelte/icons/search-x";
+	import XIcon from "@lucide/svelte/icons/x";
+	import { COUNTRY_CODES } from "$lib/data/country-codes";
 	import { cn } from "$lib/utils";
+
+	function normalize(s: string) {
+		return s
+			.normalize("NFD")
+			.replace(/[̀-ͯ]/g, "")
+			.toLowerCase();
+	}
 
 	interface StickerRow {
 		stickerId: string;
@@ -30,6 +39,12 @@
 	let teamFilter = $state<string | null>(null);
 
 	let gridRoot: HTMLDivElement | undefined;
+	let searchInputEl: HTMLInputElement | null = $state(null);
+
+	function clearSearch() {
+		search = "";
+		searchInputEl?.focus();
+	}
 
 	function resetFilters() {
 		search = "";
@@ -50,19 +65,24 @@
 	// Mantener orden de aparición (el back devuelve por createdAt = orden del seed = grupos A-L).
 	const allTeams = $derived([...new Set(stickers.map((s) => s.team))]);
 
-	const filteredStickers = $derived(
-		stickers.filter((s) => {
-			if (
-				search.trim() &&
-				!s.playerName.toLowerCase().includes(search.trim().toLowerCase())
-			)
-				return false;
+	const filteredStickers = $derived.by(() => {
+		const q = normalize(search.trim());
+		return stickers.filter((s) => {
+			if (q) {
+				const code = (COUNTRY_CODES[s.team] ?? "").toLowerCase();
+				if (
+					!normalize(s.playerName).includes(q) &&
+					!normalize(s.team).includes(q) &&
+					!code.includes(q)
+				)
+					return false;
+			}
 			if (statusFilter === "missing" && s.count !== 0) return false;
 			if (statusFilter === "dupes" && s.count < 2) return false;
 			if (teamFilter && s.team !== teamFilter) return false;
 			return true;
-		}),
-	);
+		});
+	});
 
 	const groupedByTeam = $derived(
 		filteredStickers.reduce<Record<string, StickerRow[]>>((acc, s) => {
@@ -79,12 +99,25 @@
 	<!-- Filter panel -->
 	<div class="space-y-3">
 		<!-- Search input -->
-		<Input
-			type="search"
-			placeholder="Buscar jugador..."
-			bind:value={search}
-			class="w-full md:max-w-sm"
-		/>
+		<div class="relative md:max-w-sm">
+			<Input
+				bind:ref={searchInputEl}
+				type="search"
+				placeholder="Buscar jugador, país o código..."
+				bind:value={search}
+				class="w-full pr-9"
+			/>
+			{#if search}
+				<button
+					type="button"
+					onclick={clearSearch}
+					aria-label="Limpiar búsqueda"
+					class="absolute right-2 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded text-muted-foreground transition hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+				>
+					<XIcon class="size-3.5" />
+				</button>
+			{/if}
+		</div>
 
 		<!-- Status chips -->
 		<div class="flex flex-wrap gap-2">
