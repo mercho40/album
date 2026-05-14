@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { setContext } from "svelte";
 	import BackLink from "$lib/components/back-link.svelte";
 	import ShareDialog from "$lib/components/share-dialog.svelte";
+	import StatsDialog from "$lib/components/stats-dialog.svelte";
 	import SettingsIcon from "@lucide/svelte/icons/settings";
 	import LinkIcon from "@lucide/svelte/icons/link-2";
 	import CheckIcon from "@lucide/svelte/icons/check";
@@ -9,7 +11,21 @@
 	import { toast } from "svelte-sonner";
 	import { page } from "$app/state";
 
+	interface StickerRow {
+		stickerId: string;
+		number: string;
+		playerName: string;
+		team: string;
+		type: string;
+		imageUrl: string | null;
+		count: number;
+	}
+
 	let { data, children } = $props();
+
+	// Shared reactive object — the page writes stickers here once resolved.
+	const stickersCtx = $state<{ items: StickerRow[] }>({ items: [] });
+	setContext("stickersCtx", stickersCtx);
 
 	// En sub-rutas (settings, etc.) el back lleva al álbum; en la raíz del álbum, al home.
 	const albumPath = $derived(`/albums/${data.album.slug}`);
@@ -57,6 +73,7 @@
 					<LinkIcon class="size-5" />
 				{/if}
 			</button>
+			<StatsDialog stickers={stickersCtx.items} />
 			{#if data.memberRole !== null}
 				<ShareDialog
 					albumSlug={data.album.slug}

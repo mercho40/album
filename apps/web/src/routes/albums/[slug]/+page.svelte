@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { getContext } from "svelte";
 	import StickerGrid from "$lib/components/sticker-grid.svelte";
 	import { Skeleton } from "$lib/components/ui/skeleton/index.js";
 	import { Button } from "$lib/components/ui/button/index.js";
@@ -16,6 +17,9 @@
 	// cuando data.stickers cambia (al navegar a otro álbum).
 	let stickers = $state<Sticker[]>([]);
 
+	// Push stickers to the shared context so the layout stats button stays current.
+	const stickersCtx = getContext<{ items: Sticker[] }>("stickersCtx");
+
 	$effect(() => {
 		let cancelled = false;
 		data.stickers.then((s) => {
@@ -24,6 +28,11 @@
 		return () => {
 			cancelled = true;
 		};
+	});
+
+	// Mirror local stickers (including optimistic updates) to the context.
+	$effect(() => {
+		stickersCtx.items = stickers;
 	});
 
 	async function updateCount(stickerId: string, count: number) {
