@@ -4,8 +4,7 @@ import { album, organization, member, user as userTable } from "../db/schema";
 import { auth } from "../lib/auth";
 import { betterAuth } from "./_shared";
 import { and, eq } from "drizzle-orm";
-
-const MANAGER_ROLES = ["owner", "admin"];
+import { isManagerRole, isOwnerRole } from "../lib/roles";
 
 export const albumRoutes = new Elysia({ prefix: "/albums" })
   .use(betterAuth)
@@ -170,7 +169,7 @@ export const albumRoutes = new Elysia({ prefix: "/albums" })
         .from(member)
         .where(and(eq(member.organizationId, a.id), eq(member.userId, user.id)))
         .limit(1);
-      if (!requester || !MANAGER_ROLES.includes(requester.role)) {
+      if (!isManagerRole(requester?.role ?? null)) {
         return status(403, {
           error: { code: "FORBIDDEN", message: "Solo el propietario puede editar el álbum" },
         });
@@ -227,7 +226,7 @@ export const albumRoutes = new Elysia({ prefix: "/albums" })
         .from(member)
         .where(and(eq(member.organizationId, a.id), eq(member.userId, user.id)))
         .limit(1);
-      if (!requester || requester.role !== "owner") {
+      if (!isOwnerRole(requester?.role ?? null)) {
         return status(403, {
           error: { code: "FORBIDDEN", message: "Solo el propietario puede eliminar el álbum" },
         });
@@ -304,7 +303,7 @@ export const albumRoutes = new Elysia({ prefix: "/albums" })
         .from(member)
         .where(and(eq(member.organizationId, a.id), eq(member.userId, user.id)))
         .limit(1);
-      if (!requester || !MANAGER_ROLES.includes(requester.role)) {
+      if (!isManagerRole(requester?.role ?? null)) {
         return status(403, {
           error: { code: "FORBIDDEN", message: "Solo el propietario puede agregar miembros" },
         });
@@ -395,7 +394,7 @@ export const albumRoutes = new Elysia({ prefix: "/albums" })
           .from(member)
           .where(and(eq(member.organizationId, a.id), eq(member.userId, user.id)))
           .limit(1);
-        if (!requester || !MANAGER_ROLES.includes(requester.role)) {
+        if (!isManagerRole(requester?.role ?? null)) {
           return status(403, {
             error: { code: "FORBIDDEN", message: "Solo el propietario puede quitar miembros" },
           });
