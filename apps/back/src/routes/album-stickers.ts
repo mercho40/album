@@ -4,8 +4,7 @@ import { album, albumSticker, organization, member, sticker } from "../db/schema
 import { auth } from "../lib/auth";
 import { betterAuth } from "./_shared";
 import { and, eq, sql } from "drizzle-orm";
-
-const EDITOR_ROLES = ["owner", "admin", "editor"] as const;
+import { isEditorRole } from "../lib/roles";
 
 async function loadAlbumBySlug(slug: string) {
   const [row] = await db
@@ -78,7 +77,7 @@ export const albumStickerRoutes = new Elysia({ prefix: "/albums" })
       }
 
       const role = await userRoleInAlbum(a.id, user.id);
-      if (!role || !EDITOR_ROLES.includes(role as (typeof EDITOR_ROLES)[number])) {
+      if (!isEditorRole(role)) {
         return status(403, {
           error: { code: "INSUFFICIENT_PERMISSIONS", message: "No podés editar este álbum" },
         });
