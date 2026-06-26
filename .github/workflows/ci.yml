@@ -1,0 +1,169 @@
+name: CI/CD
+
+# Pipeline de calidad (TP3): lint → test → build → e2e y, solo si TODO pasa en
+# un push a main, deploy de front (Vercel) y back (haloy).
+#
+# Secrets requeridos (Settings → Secrets and variables → Actions):
+#   E2E:        NEON_API_KEY, NEON_PROJECT_ID, BETTER_AUTH_SECRET
+#   deploy-web: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
+#   deploy-api: HALOY_API_TOKEN, DATABASE_URL, BETTER_AUTH_SECRET, BETTER_AUTH_URL,
+#               WEB_URL, GH_CLIENT_ID, GH_CLIENT_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET
+#   (GitHub no permite secrets con prefijo GITHUB_, por eso GH_CLIENT_ID/SECRET.)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  BUN_VERSION: "1.3.14"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - run: bun install --frozen-lockfile
+      - run: bun run lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - run: bun install --frozen-lockfile
+      - run: bun run test
+      - run: bun run check-types
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - run: bun install --frozen-lockfile
+      - run: bun run build
+        env:
+          # Placeholders solo para que el build del front resuelva los $env.
+          # El deploy real usa los envs configurados en Vercel.
+          PUBLIC_API_URL: https://api.album.mersich.net
+          BETTER_AUTH_SECRET: ci-build-placeholder-not-used-to-sign
+
+  e2e:
+    runs-on: ubuntu-latest
+    # Corre solo si lint y test pasaron: no tiene sentido crear el branch de Neon
+    # ni levantar la app si ya sabemos que algo básico falla.
+    needs: [lint, test]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - run: bun install --frozen-lockfile
+
+      - name: Crear branch efímero de Neon
+        id: neon
+        uses: neondatabase/create-branch-action@v5
+        with:
+          project_id: ${{ secrets.NEON_PROJECT_ID }}
+          branch_name: ci-${{ github.run_id }}
+          api_key: ${{ secrets.NEON_API_KEY }}
+
+      - name: Migrar + seed del catálogo
+        working-directory: apps/back
+        env:
+          DATABASE_URL: ${{ steps.neon.outputs.db_url }}
+        run: |
+          bunx drizzle-kit migrate
+          bun run db:seed
+
+      - name: Instalar navegador de Playwright
+        working-directory: apps/web
+        run: bunx playwright install --with-deps chromium
+
+      - name: Correr E2E
+        working-directory: apps/web
+        env:
+          DATABASE_URL: ${{ steps.neon.outputs.db_url }}
+          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+          BETTER_AUTH_URL: http://localhost:3000
+          WEB_URL: http://localhost:4173
+          PUBLIC_API_URL: http://localhost:3000
+        run: bun run test:e2e
+
+      - name: Borrar branch de Neon
+        if: always()
+        uses: neondatabase/delete-branch-action@v3
+        with:
+          project_id: ${{ secrets.NEON_PROJECT_ID }}
+          branch: ci-${{ github.run_id }}
+          api_key: ${{ secrets.NEON_API_KEY }}
+
+  # ── Deploy: solo en push a main y solo si TODO lo anterior pasó ──────────
+  deploy-web:
+    runs-on: ubuntu-latest
+    needs: [lint, test, build, e2e]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - run: bun install --frozen-lockfile
+      - name: Deploy a Vercel (producción)
+        working-directory: apps/web
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          bunx vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+          bunx vercel build --prod --token="$VERCEL_TOKEN"
+          bunx vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+
+  deploy-api:
+    runs-on: ubuntu-latest
+    needs: [lint, test, build, e2e]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    concurrency:
+      group: deploy-api
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - run: bun install --frozen-lockfile
+
+      # La imagen de runtime (debian slim + binario) no trae drizzle-kit, así que
+      # migramos prod desde el runner ANTES de deployar, gateado igual que el deploy.
+      - name: Migrar DB de producción
+        working-directory: apps/back
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: bunx drizzle-kit migrate
+
+      - name: Deploy con haloy
+        uses: haloydev/deploy-action@v1
+        with:
+          api-token: ${{ secrets.HALOY_API_TOKEN }}
+        env:
+          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
+          WEB_URL: ${{ secrets.WEB_URL }}
+          GITHUB_CLIENT_ID: ${{ secrets.GH_CLIENT_ID }}
+          GITHUB_CLIENT_SECRET: ${{ secrets.GH_CLIENT_SECRET }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
