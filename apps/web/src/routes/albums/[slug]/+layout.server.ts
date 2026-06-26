@@ -1,5 +1,6 @@
 import { error } from "@sveltejs/kit";
 import { createApi } from "$lib/api";
+import { albumPermissions } from "$lib/permissions";
 import type { LayoutServerLoad } from "./$types";
 
 export const load: LayoutServerLoad = async ({ params, fetch, locals }) => {
@@ -18,8 +19,7 @@ export const load: LayoutServerLoad = async ({ params, fetch, locals }) => {
 		memberRole = found?.memberRole ?? null;
 	}
 
-	const canEdit = memberRole !== null && ["owner", "admin", "editor"].includes(memberRole);
-	const canManage = memberRole !== null && ["owner", "admin"].includes(memberRole);
+	const { canEdit, canManage } = albumPermissions(memberRole);
 
 	return {
 		album: albumRes.data,

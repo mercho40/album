@@ -6,15 +6,8 @@
 	import * as Empty from "$lib/components/ui/empty/index.js";
 	import SearchXIcon from "@lucide/svelte/icons/search-x";
 	import XIcon from "@lucide/svelte/icons/x";
-	import { COUNTRY_CODES } from "$lib/data/country-codes";
+	import { stickerMatchesQuery } from "$lib/search";
 	import { cn } from "$lib/utils";
-
-	function normalize(s: string) {
-		return s
-			.normalize("NFD")
-			.replace(/[̀-ͯ]/g, "")
-			.toLowerCase();
-	}
 
 	interface StickerRow {
 		stickerId: string;
@@ -66,17 +59,8 @@
 	const allTeams = $derived([...new Set(stickers.map((s) => s.team))]);
 
 	const filteredStickers = $derived.by(() => {
-		const q = normalize(search.trim());
 		return stickers.filter((s) => {
-			if (q) {
-				const code = (COUNTRY_CODES[s.team] ?? "").toLowerCase();
-				if (
-					!normalize(s.playerName).includes(q) &&
-					!normalize(s.team).includes(q) &&
-					!code.includes(q)
-				)
-					return false;
-			}
+			if (!stickerMatchesQuery(s, search)) return false;
 			if (statusFilter === "missing" && s.count !== 0) return false;
 			if (statusFilter === "dupes" && s.count < 2) return false;
 			if (teamFilter && s.team !== teamFilter) return false;
