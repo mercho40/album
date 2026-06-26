@@ -7,12 +7,19 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
     "test": "turbo run test",
+    "lint": "eslint .",
     "start": "turbo run start"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.5.0",
+    "eslint-plugin-svelte": "^3.20.0",
+    "globals": "^17.7.0",
     "prettier": "^3.8.3",
     "prettier-plugin-svelte": "^3.5.1",
-    "turbo": "^2.9.6"
+    "svelte-eslint-parser": "^1.8.0",
+    "turbo": "^2.9.6",
+    "typescript-eslint": "^8.62.0"
   },
   "engines": {
     "node": ">=18"
