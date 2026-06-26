@@ -121,6 +121,21 @@ bun run dev
 2. PR a `develop` con review del compañero.
 3. Cuando `develop` está estable: PR `develop` → `main` con tag SemVer.
 
+**Convención de nombres (TP3):** el trabajo va en ramas `feature/<nombre>` (funcionalidad/mejora) o `fix/<nombre>` (bug). Cada rama nace de un issue y se mergea por PR con `closes #N` y review del compañero — nada va directo a `main`.
+
+## CI/CD
+
+Pipeline de GitHub Actions (`.github/workflows/ci.yml`) en cada push y PR a `main`:
+`lint` → `test` → `build` → `e2e`, y **solo si todo pasa en un push a `main`**, deploy.
+
+- **lint** — ESLint (`eslint .`).
+- **test** — unit con `bun test` (front + back) + `check-types`.
+- **build** — `turbo run build` del front.
+- **e2e** — Playwright contra la app levantada sobre un branch efímero de Neon (creado y destruido por corrida).
+- **deploy** — gateado por `needs: [lint, test, build, e2e]`: si algo falla, no se despliega. Front a Vercel y back vía `haloy deploy`; las migraciones de prod corren como paso de CI antes del deploy del back.
+
+Estrategia, herramientas y casos de uso documentados en [CALIDAD.md](./CALIDAD.md).
+
 ## Versionado
 
 SemVer:
