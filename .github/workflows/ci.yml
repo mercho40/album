@@ -44,6 +44,12 @@ jobs:
       - run: bun install --frozen-lockfile
       - run: bun run test
       - run: bun run check-types
+        env:
+          # svelte-kit sync necesita los $env/static públicos definidos para
+          # generar sus tipos; si no, svelte-check falla con "has no exported
+          # member 'PUBLIC_API_URL'". Placeholders — el type-check no usa los valores.
+          PUBLIC_API_URL: https://api.album.mersich.net
+          BETTER_AUTH_SECRET: ci-build-placeholder-not-used-to-sign
 
   build:
     runs-on: ubuntu-latest
