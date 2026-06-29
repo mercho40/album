@@ -29,7 +29,7 @@ export default defineConfig({
 			timeout: 60_000,
 		},
 		{
-			command: `bun run build && bun run preview --port ${WEB_PORT}`,
+			command: `bun run build && bun run preview -- --port ${WEB_PORT}`,
 			port: WEB_PORT,
 			reuseExistingServer: !process.env.CI,
 			timeout: 120_000,
