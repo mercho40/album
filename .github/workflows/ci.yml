@@ -168,13 +168,18 @@ jobs:
       # deployamos. haloy buildea el Dockerfile (stage `back`) en el runner y sube
       # la imagen al haloyd. Los secrets `from.env` se resuelven del entorno del step.
       - name: Instalar haloy CLI
-        # Descarga directa del binario (evita el lookup de "latest version" vía la
-        # API de GitHub, que en runners compartidos da rate limit: "Could not
-        # determine the latest Haloy version").
+        # haloy publica solo pre-releases, así que releases/latest da 404. Tomamos
+        # el tag más reciente vía API (con token para evitar rate limit) y bajamos
+        # el binario de ese tag.
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p "$HOME/.local/bin"
+          TAG=$(curl -fsSL -H "Authorization: Bearer $GH_TOKEN" \
+            https://api.github.com/repos/haloydev/haloy/releases | jq -r '.[0].tag_name')
+          echo "haloy CLI tag: $TAG"
           curl -fsSL -o "$HOME/.local/bin/haloy" \
-            https://github.com/haloydev/haloy/releases/latest/download/haloy-linux-amd64
+            "https://github.com/haloydev/haloy/releases/download/$TAG/haloy-linux-amd64"
           chmod +x "$HOME/.local/bin/haloy"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - name: Verificar haloy
