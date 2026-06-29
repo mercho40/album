@@ -151,7 +151,7 @@
 				{ label: "Doradas (escudo)", color: "#EAB308", group: stats.golden },
 				{ label: "Foto de equipo (#13)", color: "#3B82F6", group: stats.team },
 				{ label: "Comunes", color: "#22C55E", group: stats.common },
-			] as row, i}
+			] as row, i (row.label)}
 				<div class={cn("flex items-center gap-3 px-3 py-2.5", i > 0 && "border-t")}>
 					<span class="size-3 shrink-0 rounded-full" style="background:{row.color}"></span>
 					<span class="min-w-0 flex-1 text-sm">{row.label}</span>

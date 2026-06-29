@@ -53,7 +53,7 @@
 				stickers = prev;
 				toast.error("No se pudo actualizar la figurita");
 			}
-		} catch (e) {
+		} catch {
 			stickers = prev;
 			toast.error("No se pudo actualizar la figurita");
 		}
