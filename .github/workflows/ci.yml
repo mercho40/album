@@ -168,10 +168,15 @@ jobs:
       # deployamos. haloy buildea el Dockerfile (stage `back`) en el runner y sube
       # la imagen al haloyd. Los secrets `from.env` se resuelven del entorno del step.
       - name: Instalar haloy CLI
+        # Descarga directa del binario (evita el lookup de "latest version" vía la
+        # API de GitHub, que en runners compartidos da rate limit: "Could not
+        # determine the latest Haloy version").
         run: |
-          curl -fsSL https://sh.haloy.dev/install-haloy.sh | sh
+          mkdir -p "$HOME/.local/bin"
+          curl -fsSL -o "$HOME/.local/bin/haloy" \
+            https://github.com/haloydev/haloy/releases/latest/download/haloy-linux-amd64
+          chmod +x "$HOME/.local/bin/haloy"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-          echo "/usr/local/bin" >> "$GITHUB_PATH"
       - name: Verificar haloy
         run: haloy version
       - name: Registrar server haloyd
