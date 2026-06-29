@@ -1,0 +1,56 @@
+# Deploy del back (Elysia + Bun) con haloy.
+#
+#   haloy deploy            → buildea Dockerfile (stage final `back`) y lo sube al haloyd
+#   haloy validate-config   → valida este archivo
+#
+# Los secrets se resuelven del entorno del deploy (GitHub Actions) vía `from.env`
+# — nunca se commitean acá. Ver .github/workflows/ci.yml (job deploy-api).
+
+name: album-api
+# Control-plane del haloyd. Mismo VPS que resto4 → confirmar/ajustar el dominio.
+server: haloy.restoman.app
+
+image:
+  repository: album-api
+  build_config:
+    context: .
+    # El Dockerfile de la raíz: su stage final es `back`, así que se buildea por defecto.
+    dockerfile: Dockerfile
+    platform: linux/amd64
+
+# Dominio público de la API. Ajustar al que apunte al reverse proxy del haloyd.
+domains:
+  - domain: api.album.mersich.net
+
+port: "3000"
+health_check_path: /health
+
+env:
+  # ── Config no-secreta ──────────────────────────────────────────────
+  - name: NODE_ENV
+    value: production
+  # ── Secrets (resueltos del entorno del runner, nunca commiteados) ───
+  - name: BETTER_AUTH_SECRET
+    from:
+      env: BETTER_AUTH_SECRET
+  - name: DATABASE_URL
+    from:
+      env: DATABASE_URL
+  - name: BETTER_AUTH_URL
+    from:
+      env: BETTER_AUTH_URL
+  - name: WEB_URL
+    from:
+      env: WEB_URL
+  - name: GITHUB_CLIENT_ID
+    from:
+      env: GITHUB_CLIENT_ID
+  - name: GITHUB_CLIENT_SECRET
+    from:
+      env: GITHUB_CLIENT_SECRET
+  - name: GOOGLE_CLIENT_ID
+    from:
+      env: GOOGLE_CLIENT_ID
+  - name: GOOGLE_CLIENT_SECRET
+    from:
+      env: GOOGLE_CLIENT_SECRET
