@@ -14,6 +14,8 @@
 	import SunIcon from "@lucide/svelte/icons/sun";
 	import MoonIcon from "@lucide/svelte/icons/moon";
 	import MonitorIcon from "@lucide/svelte/icons/monitor";
+	import UserIcon from "@lucide/svelte/icons/user";
+	import { goto } from "$app/navigation";
 
 	let { data } = $props();
 
@@ -115,6 +117,13 @@
 							<span class="truncate text-xs text-muted-foreground">{data.user.email}</span>
 						{/if}
 					</DropdownMenu.Label>
+
+					<DropdownMenu.Separator />
+
+					<DropdownMenu.Item onclick={() => goto("/me")}>
+						<UserIcon />
+						Perfil y cuenta
+					</DropdownMenu.Item>
 
 					<DropdownMenu.Separator />
 
