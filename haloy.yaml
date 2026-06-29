@@ -42,12 +42,8 @@ env:
   - name: WEB_URL
     from:
       env: WEB_URL
-  - name: GITHUB_CLIENT_ID
-    from:
-      env: GITHUB_CLIENT_ID
-  - name: GITHUB_CLIENT_SECRET
-    from:
-      env: GITHUB_CLIENT_SECRET
+  # (GitHub OAuth no está configurado en auth.ts — solo Google — así que no se
+  # pasan GITHUB_CLIENT_ID/SECRET. Además GitHub Actions reserva el prefijo GITHUB_.)
   - name: GOOGLE_CLIENT_ID
     from:
       env: GOOGLE_CLIENT_ID
