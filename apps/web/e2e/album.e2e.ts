@@ -9,15 +9,16 @@ test("registro, creación de álbum y marcado de una figurita", async ({ page })
 
 	// 1. Registro
 	await page.goto("/signup");
-	await page.getByLabel("Email").fill(email);
-	await page.getByLabel("Contraseña").fill(password);
+	await page.getByLabel("Email", { exact: true }).fill(email);
+	// exact: el toggle "Mostrar contraseña" también matchea "Contraseña".
+	await page.getByLabel("Contraseña", { exact: true }).fill(password);
 	await page.getByRole("button", { name: "Crear cuenta" }).click();
 
 	// Tras el signup, la app redirige a /new-album.
 	await expect(page).toHaveURL(/\/new-album/);
 
 	// 2. Crear álbum
-	await page.getByLabel("Nombre").fill(`E2E ${unique}`);
+	await page.getByLabel("Nombre", { exact: true }).fill(`E2E ${unique}`);
 	await page.getByRole("button", { name: "Crear álbum" }).click();
 
 	// Redirige a la vista del álbum recién creado.
