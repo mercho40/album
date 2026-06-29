@@ -33,13 +33,15 @@ export const auth = betterAuth({
     },
   },
   trustedOrigins: [process.env.WEB_URL!],
-  // Cookies con Domain=.mersich.net para que el front (album.mersich.net) las lea
-  // aunque las setee el back (album-back.mersich.net).
+  // Cross-subdomain cookies SOLO cuando hay COOKIE_DOMAIN (prod: .mersich.net),
+  // para que el front (album.mersich.net) lea la cookie que setea el back
+  // (album-back.mersich.net). Sin COOKIE_DOMAIN (dev/E2E en localhost) se dejan
+  // host-only: el front las lee entre puertos, y se evita que better-auth derive
+  // Domain=localhost (que el browser rechaza → el front no vería la sesión).
   advanced: {
-    crossSubDomainCookies: {
-      enabled: true,
-      domain: process.env.COOKIE_DOMAIN,
-    },
+    crossSubDomainCookies: process.env.COOKIE_DOMAIN
+      ? { enabled: true, domain: process.env.COOKIE_DOMAIN }
+      : { enabled: false },
   },
   // Joined session reads — one query instead of N on getSession.
   experimental: { joins: true },
