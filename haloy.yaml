@@ -29,6 +29,11 @@ env:
   # ── Config no-secreta ──────────────────────────────────────────────
   - name: NODE_ENV
     value: production
+  # Comparte la cookie de sesión entre album.mersich.net (front) y
+  # album-back.mersich.net (back). Sin esto la cookie queda host-only en el back
+  # y el SSR del front no ve la sesión → login no persiste.
+  - name: COOKIE_DOMAIN
+    value: .mersich.net
   # ── Secrets (resueltos del entorno del runner, nunca commiteados) ───
   - name: BETTER_AUTH_SECRET
     from:
