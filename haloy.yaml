@@ -20,7 +20,7 @@ image:
 
 # Dominio público de la API. Ajustar al que apunte al reverse proxy del haloyd.
 domains:
-  - domain: api.album.mersich.net
+  - domain: album-back.mersich.net
 
 port: "3000"
 health_check_path: /health
