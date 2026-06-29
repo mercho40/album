@@ -128,17 +128,18 @@ jobs:
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: ${{ env.BUN_VERSION }}
-      - run: bun install --frozen-lockfile
+      # Build server-side en Vercel: usa el Root Directory (apps/web) y el preset
+      # SvelteKit del proyecto. Se corre desde la raíz del repo para que el
+      # buildCommand del monorepo (cd ../.. && bun install) resuelva las deps.
+      # (vercel build local hacía un `vite build` sin el contexto de SvelteKit.)
       - name: Deploy a Vercel (producción)
-        working-directory: apps/web
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
           bunx vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
-          bunx vercel build --prod --token="$VERCEL_TOKEN"
-          bunx vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+          bunx vercel deploy --prod --token="$VERCEL_TOKEN"
 
   deploy-api:
     runs-on: ubuntu-latest
@@ -155,17 +156,30 @@ jobs:
       - run: bun install --frozen-lockfile
 
       # La imagen de runtime (debian slim + binario) no trae drizzle-kit, así que
-      # migramos prod desde el runner ANTES de deployar, gateado igual que el deploy.
-      - name: Migrar DB de producción
+      # migramos prod desde el runner antes de deployar. No bloqueante: si el journal
+      # de prod no matchea (schema creado fuera de migrate), avisamos y seguimos.
+      - name: Migrar DB de producción (no bloqueante)
         working-directory: apps/back
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: bunx drizzle-kit migrate
+        run: bunx drizzle-kit migrate || echo "::warning::drizzle migrate no aplicable; revisar manualmente"
 
+      # haloy no tiene una action oficial publicada, así que instalamos el CLI y
+      # deployamos. haloy buildea el Dockerfile (stage `back`) en el runner y sube
+      # la imagen al haloyd. Los secrets `from.env` se resuelven del entorno del step.
+      - name: Instalar haloy CLI
+        run: |
+          curl -fsSL https://sh.haloy.dev/install-haloy.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          echo "/usr/local/bin" >> "$GITHUB_PATH"
+      - name: Verificar haloy
+        run: haloy version
+      - name: Registrar server haloyd
+        run: haloy server add haloy.restoman.app "$HALOY_TOKEN" --force
+        env:
+          HALOY_TOKEN: ${{ secrets.HALOY_API_TOKEN }}
       - name: Deploy con haloy
-        uses: haloydev/deploy-action@v1
-        with:
-          api-token: ${{ secrets.HALOY_API_TOKEN }}
+        run: haloy deploy
         env:
           BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
