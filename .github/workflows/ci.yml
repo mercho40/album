@@ -86,13 +86,15 @@ jobs:
           branch_name: ci-${{ github.run_id }}
           api_key: ${{ secrets.NEON_API_KEY }}
 
-      - name: Migrar + seed del catálogo
+      - name: Seed del catálogo
         working-directory: apps/back
         env:
           DATABASE_URL: ${{ steps.neon.outputs.db_url }}
-        run: |
-          bunx drizzle-kit migrate
-          bun run db:seed
+        # El branch de Neon es una copia del branch default (producción), así que
+        # el schema ya existe. No corremos `drizzle-kit migrate` porque intentaría
+        # recrear objetos existentes y falla. El seed es idempotente y garantiza el
+        # catálogo para el paso de marcado del E2E (usa el cliente Bun SQL del app).
+        run: bun run db:seed
 
       - name: Instalar navegador de Playwright
         working-directory: apps/web
