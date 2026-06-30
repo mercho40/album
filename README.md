@@ -2,7 +2,7 @@
 
 App web para registrar las figuritas del álbum Panini Mundial 2026: marcá las que tenés y las repetidas, compartí tu álbum con familia o amigos para llevar la cuenta entre varios. Próximamente: encontrá automáticamente con quién podés intercambiar.
 
-🌐 **Demo:** [album.mersich.net](https://album.mersich.net) (deploy automático desde `main`)
+🌐 **Demo:** [album.mersich.net](https://album.mersich.net) — API en [album-back.mersich.net](https://album-back.mersich.net). Deploy automático desde `main` vía el pipeline de CI/CD (gateado).
 📦 **Repo:** [github.com/mercho40/album](https://github.com/mercho40/album)
 
 ## Integrantes
@@ -12,11 +12,11 @@ App web para registrar las figuritas del álbum Panini Mundial 2026: marcá las 
 
 ## Funcionalidades (MVP1)
 
-- ✅ Registro / login con email + password (Google y GitHub disponibles vía OAuth)
+- ✅ Registro / login con email + password (Google disponible vía OAuth)
 - ✅ Crear álbumes propios con visibilidad configurable (`public` / `unlisted` / `private`)
 - ✅ Marcar figuritas: poseídas y repetidas, sobre catálogo completo WC2026 (994 stickers)
 - ✅ Persistencia en Postgres (Neon) con Drizzle
-- ✅ Despliegue: Vercel (front) + Dokploy/EC2 (back, Docker + Bun) + Neon (DB)
+- ✅ Despliegue: Vercel (front) + haloy (back, Docker + Bun) + Neon (DB), vía pipeline de CI/CD gateado
 
 ## Funcionalidades (MVP2 — en desarrollo)
 
@@ -35,10 +35,11 @@ App web para registrar las figuritas del álbum Panini Mundial 2026: marcá las 
 - **Monorepo:** Turborepo
 - **Frontend:** SvelteKit 5 (runes), Tailwind 4, shadcn-svelte
 - **Backend:** Elysia (Bun)
-- **Auth:** Better Auth (email/password + Google + GitHub) con plugin `organization()`
+- **Auth:** Better Auth (email/password + Google) con plugin `organization()`
 - **DB:** Drizzle ORM + PostgreSQL (Neon)
 - **API:** Eden Treaty (RPC type-safe extremo a extremo)
-- **Hosting:** Vercel (front) + Dokploy en EC2 (back, contenedor Docker con Bun) + Neon (DB)
+- **Hosting:** Vercel (front) + haloy (back, contenedor Docker con Bun, en un VPS) + Neon (DB)
+- **CI/CD:** GitHub Actions (lint → test → build → e2e → deploy gateado); tests con `bun test` + Playwright
 
 ## Decisiones técnicas
 
@@ -56,10 +57,12 @@ El seed de figuritas (`apps/back/seed/wc2026.json`) se carga vía script adminis
 ### 4. Optimistic updates en marcar figuritas
 La grilla del álbum hace un PATCH al servidor pero actualiza la UI inmediatamente. Si el servidor rechaza el cambio, revierte el estado local. Resultado: percepción de instantaneidad incluso con latencia visible.
 
-### 5. Hosting híbrido: Vercel (front) + Dokploy/EC2 (back)
-El front es SvelteKit con `@sveltejs/adapter-vercel`. El back es Elysia + Bun + Better Auth, contenedorizado con un `Dockerfile` multi-stage en la raíz (build con `bun build --compile` a binario standalone, runtime Debian slim). Dokploy en una EC2 hace el deploy automático desde el push a `main`. El front llama al back cross-origin con CORS y `credentials: "include"`; `cookieCache.maxAge=7d` evita re-logins espurios.
+### 5. Hosting híbrido: Vercel (front) + haloy (back)
+El front es SvelteKit con `@sveltejs/adapter-vercel`. El back es Elysia + Bun + Better Auth, contenedorizado con un `Dockerfile` multi-stage en la raíz (build con `bun build --compile` a binario standalone, runtime Debian slim). El deploy del back lo hace **haloy** (`haloy deploy` buildea el `Dockerfile` y sube la imagen a un haloyd en un VPS), disparado desde el pipeline de CI/CD y solo si todos los pasos pasan. El front llama al back cross-origin con CORS y `credentials: "include"`.
 
-**Por qué no Vercel para el back:** Better Auth crashea al cargarse en el runtime Bun de Vercel (circular dependencies según [issue Vercel community](https://community.vercel.com/t/elysia-and-bun-serverless-function-fails-with-exit-status-1-on-vercel/33734)). Dokploy nos da un proceso Bun persistente, sin cold starts y compatible con todo el stack.
+Como front (`album.mersich.net`) y back (`album-back.mersich.net`) son subdominios del mismo dominio, la cookie de sesión se comparte con `COOKIE_DOMAIN=.mersich.net` (`crossSubDomainCookies`); `cookieCache.maxAge=7d` evita re-logins espurios.
+
+**Por qué no Vercel para el back:** Better Auth crashea al cargarse en el runtime Bun de Vercel (circular dependencies según [issue Vercel community](https://community.vercel.com/t/elysia-and-bun-serverless-function-fails-with-exit-status-1-on-vercel/33734)). haloy nos da un proceso Bun persistente, sin cold starts y compatible con todo el stack.
 
 ### 6. Permisos resueltos server-side
 El layout server load del álbum calcula `canView`, `canEdit`, `canManage` en base al rol del miembro (o ausencia de rol para visitantes). El front solo muestra/oculta controles según los flags. Los endpoints **también** validan permisos (no confían en el front).
