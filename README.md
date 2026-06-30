@@ -23,11 +23,10 @@ App web para registrar las figuritas del álbum Panini Mundial 2026: marcá las 
 - ✅ Compartir álbum: agregar miembros por email (si ya tienen cuenta) con rol `editor`; quitar miembros; salir del álbum (#52, #56)
 - ✅ Configuración del álbum: editar nombre/descripción/visibilidad y eliminar el álbum (#52)
 - ✅ Copiar link del álbum al portapapeles desde el header (#58)
-- 🚧 Invitaciones por email (sin email provider configurado todavía — por ahora solo direct-add)
+- ✅ Edición de perfil y ajustes de cuenta: página `/me` (nombre, foto, cambio de contraseña) (#85)
 - 🚧 Directorio público + matchmaker (encontrar con quién intercambiar automáticamente)
 - 🚧 Propuestas de intercambio con máquina de estados (`pending` → `accepted` → `completed`)
-- 🚧 Avatar de usuario (CDN: Vercel Blob)
-- 🚧 Edición de perfil del usuario
+- 🚧 Subida de avatar a un CDN (Vercel Blob) — por ahora la foto se setea por URL
 
 ## Stack
 
@@ -70,7 +69,7 @@ El layout server load del álbum calcula `canView`, `canEdit`, `canManage` en ba
 Roles actuales: `owner` (creador, único que puede editar metadata o eliminar) y `editor` (invitado, puede marcar figuritas). Visitantes (no miembros) ven el álbum si `visibility !== "private"` pero no pueden marcar.
 
 ### 7. Sharing sin email provider
-El owner agrega miembros tipeando un email; el back lo busca en la tabla `user`. Si la persona ya tiene cuenta, se inserta una fila en `member` con rol `editor`. Si no, devuelve 404 con un mensaje pidiendo que se registre primero. Sin email provider ni share-links — minimum viable hasta tener Resend o similar configurado.
+El owner agrega miembros tipeando un email; el back lo busca en la tabla `user`. Si la persona ya tiene cuenta, se inserta una fila en `member` con rol `editor`. Si no, devuelve 404 con un mensaje pidiendo que se registre primero. El compartir es por direct-add (sin email provider ni share-links); las invitaciones por email quedaron fuera de alcance.
 
 ### 8. Streaming load para figuritas
 `/albums/:slug/+page.server.ts` devuelve la promesa de figuritas sin `await`. SvelteKit la stremea al browser, así el layout (metadata + rol, ~150ms) renderiza el header del álbum apenas resuelve y la grilla cae después con su skeleton. El click en un álbum desde el home se siente ~3× más rápido que esperar las 994 figuritas antes de pintar nada.
