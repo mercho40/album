@@ -55,3 +55,7 @@ env:
   - name: GOOGLE_CLIENT_SECRET
     from:
       env: GOOGLE_CLIENT_SECRET
+  # Token del store de Vercel Blob: subida de fotos de perfil (avatares).
+  - name: BLOB_READ_WRITE_TOKEN
+    from:
+      env: BLOB_READ_WRITE_TOKEN
