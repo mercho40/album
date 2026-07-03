@@ -1,7 +1,7 @@
 # Multi-stage Dockerfile for the Elysia + Bun back app.
 #
 # Build context: repository root.
-# Dokploy: usar este Dockerfile, target=back.
+# haloy: buildea el stage final `back` de este Dockerfile (ver haloy.yaml).
 
 # ─────────────────────────────────────────────
 # Stage 1: install workspace deps

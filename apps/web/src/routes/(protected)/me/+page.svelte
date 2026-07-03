@@ -1,35 +1,96 @@
 <script lang="ts">
 	import { authClient } from "$lib/auth-client";
+	import { createApi } from "$lib/api";
 	import { Button } from "$lib/components/ui/button/index.js";
 	import * as Card from "$lib/components/ui/card/index.js";
 	import { Input } from "$lib/components/ui/input/index.js";
 	import * as Field from "$lib/components/ui/field/index.js";
+	import * as Avatar from "$lib/components/ui/avatar/index.js";
 	import BackLink from "$lib/components/back-link.svelte";
 	import { toast } from "svelte-sonner";
 	import { untrack } from "svelte";
 
 	let { data } = $props();
 
+	const ACCEPTED = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+	const MAX_BYTES = 4 * 1024 * 1024;
+
 	// ── Perfil ──────────────────────────────────────────────
 	let name = $state(untrack(() => data.user?.name ?? ""));
 	let image = $state(untrack(() => data.user?.image ?? ""));
+	let selectedFile = $state<File | null>(null);
+	let previewUrl = $state<string | null>(null);
 	let savingProfile = $state(false);
+	let fileInput = $state<HTMLInputElement>();
+
+	let initials = $derived.by(() => {
+		const source = name || data.user?.email || "";
+		const parts = source.trim().split(/\s+/).filter(Boolean);
+		return ((parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "")).toUpperCase() || "?";
+	});
+
+	function onFileChange(e: Event) {
+		const input = e.currentTarget as HTMLInputElement;
+		const file = input.files?.[0];
+		if (!file) return;
+		if (!ACCEPTED.includes(file.type)) {
+			toast.error("Formato no soportado. Usá JPG, PNG, WEBP o GIF.");
+			input.value = "";
+			return;
+		}
+		if (file.size > MAX_BYTES) {
+			toast.error("La imagen supera los 4 MB.");
+			input.value = "";
+			return;
+		}
+		if (previewUrl) URL.revokeObjectURL(previewUrl);
+		selectedFile = file;
+		previewUrl = URL.createObjectURL(file);
+	}
+
+	function removePhoto() {
+		if (previewUrl) URL.revokeObjectURL(previewUrl);
+		previewUrl = null;
+		selectedFile = null;
+		image = "";
+		if (fileInput) fileInput.value = "";
+	}
 
 	async function saveProfile(e: Event) {
 		e.preventDefault();
 		savingProfile = true;
-		await authClient.updateUser(
-			{ name: name.trim(), image: image.trim() },
-			{
-				onSuccess: () => {
-					toast.success("Perfil actualizado");
+		try {
+			let imageUrl = image.trim();
+
+			if (selectedFile) {
+				const api = createApi(fetch);
+				const { data: uploaded, error } = await api.avatar.post({ file: selectedFile });
+				if (error) {
+					toast.error("No se pudo subir la imagen. Probá de nuevo.");
+					return;
+				}
+				imageUrl = uploaded.url;
+			}
+
+			await authClient.updateUser(
+				{ name: name.trim(), image: imageUrl },
+				{
+					onSuccess: () => {
+						image = imageUrl;
+						if (previewUrl) URL.revokeObjectURL(previewUrl);
+						previewUrl = null;
+						selectedFile = null;
+						if (fileInput) fileInput.value = "";
+						toast.success("Perfil actualizado");
+					},
+					onError: (ctx) => {
+						toast.error(ctx.error.message);
+					},
 				},
-				onError: (ctx) => {
-					toast.error(ctx.error.message);
-				},
-			},
-		);
-		savingProfile = false;
+			);
+		} finally {
+			savingProfile = false;
+		}
 	}
 
 	// ── Seguridad: cambiar contraseña ───────────────────────
@@ -93,11 +154,40 @@
 					</Field.Field>
 
 					<Field.Field>
-						<Field.FieldLabel for="image">Foto (URL)</Field.FieldLabel>
-						<Input id="image" type="url" placeholder="https://…" bind:value={image} />
-						<Field.FieldDescription>
-							Pegá el link de una imagen. La subida de archivos llega más adelante.
-						</Field.FieldDescription>
+						<Field.FieldLabel>Foto</Field.FieldLabel>
+						<div class="flex items-center gap-4">
+							<Avatar.Root class="size-16">
+								{#if previewUrl || image}
+									<Avatar.Image src={previewUrl || image} alt={name} />
+								{/if}
+								<Avatar.Fallback class="text-lg font-medium">{initials}</Avatar.Fallback>
+							</Avatar.Root>
+							<div class="flex flex-col gap-2">
+								<div class="flex gap-2">
+									<Button
+										type="button"
+										variant="outline"
+										size="sm"
+										onclick={() => fileInput?.click()}
+									>
+										Cambiar foto
+									</Button>
+									{#if previewUrl || image}
+										<Button type="button" variant="ghost" size="sm" onclick={removePhoto}>
+											Quitar
+										</Button>
+									{/if}
+								</div>
+								<Field.FieldDescription>JPG, PNG, WEBP o GIF. Máx. 4 MB.</Field.FieldDescription>
+							</div>
+						</div>
+						<input
+							bind:this={fileInput}
+							type="file"
+							accept="image/jpeg,image/png,image/webp,image/gif"
+							class="hidden"
+							onchange={onFileChange}
+						/>
 					</Field.Field>
 
 					<Field.Field>
