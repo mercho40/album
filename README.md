@@ -24,9 +24,9 @@ App web para registrar las figuritas del álbum Panini Mundial 2026: marcá las 
 - ✅ Configuración del álbum: editar nombre/descripción/visibilidad y eliminar el álbum (#52)
 - ✅ Copiar link del álbum al portapapeles desde el header (#58)
 - ✅ Edición de perfil y ajustes de cuenta: página `/me` (nombre, foto, cambio de contraseña) (#85)
+- ✅ Subida de avatar a Vercel Blob desde `/me` (uploader con preview; reemplaza el input por URL) (#91)
 - 🚧 Directorio público + matchmaker (encontrar con quién intercambiar automáticamente)
 - 🚧 Propuestas de intercambio con máquina de estados (`pending` → `accepted` → `completed`)
-- 🚧 Subida de avatar a un CDN (Vercel Blob) — por ahora la foto se setea por URL
 
 ## Stack
 
@@ -144,7 +144,7 @@ SemVer:
 - `v0.1.0` — MVP1: álbum + marcar figuritas + deploy.
 - `v0.4.x` — Polish UX (skeletons, mobile padding, header redesign, navegación).
 - `v0.5.x` — Sprint social parcial: compartir álbum (direct-add), configuración del álbum, eliminar.
-- `v0.6.x` — Sprint social completo (pendiente): invitaciones por email, directorio, avatar.
+- `v0.6.x` — Sprint social completo (pendiente): invitaciones por email, directorio.
 - `v1.0.0` — Entrega final: matchmaker + trades.
 
 ## Scripts
@@ -182,6 +182,7 @@ apps/
       routes/catalog.ts              GET /catalog/:id/stickers + detalle
       routes/albums.ts               CRUD de álbumes + members (add/remove/list) + PATCH/DELETE
       routes/album-stickers.ts       GET/PATCH inventario del álbum
+      routes/avatar.ts               POST /avatar → sube foto de perfil a Vercel Blob
     seed/wc2026.json                 Catálogo completo (994 figuritas)
     migrations/                      SQL generado por drizzle-kit
     vercel.json                      Deploy en Vercel (Bun runtime)
