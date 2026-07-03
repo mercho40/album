@@ -4,6 +4,7 @@ import { betterAuth } from "./routes/_shared";
 import { catalogRoutes } from "./routes/catalog";
 import { albumRoutes } from "./routes/albums";
 import { albumStickerRoutes } from "./routes/album-stickers";
+import { avatarRoutes } from "./routes/avatar";
 
 const app = new Elysia()
   .use(
@@ -19,6 +20,7 @@ const app = new Elysia()
   .use(catalogRoutes)
   .use(albumRoutes)
   .use(albumStickerRoutes)
+  .use(avatarRoutes)
   .listen(Number(process.env.PORT) || 3000);
 
 console.log(`🦊 Elysia escuchando en :${app.server?.port}`);
